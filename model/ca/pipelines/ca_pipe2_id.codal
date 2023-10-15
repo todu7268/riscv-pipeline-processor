@@ -1,0 +1,180 @@
+/**
+ * Codasip s.r.o.
+ *
+ * CONFIDENTIAL
+ *
+ * Copyright 2022 Codasip s.r.o.
+ *
+ * All Rights Reserved.
+ *
+ * NOTICE: All information contained in this file, is and shall remain the property of
+ * Codasip s.r.o. and its suppliers, if any.
+ *
+ * The intellectual and technical concepts contained herein are confidential and proprietary to
+ * Codasip s.r.o. and are protected by trade secret and copyright law.  In addition, elements of the
+ * technical concepts may be patent pending.
+ *
+ * This file is part of the Codasip Studio product. No part of the Studio product, including this
+ * file, may be use, copied, modified, or distributed except in accordance with the terms contained
+ * in Codasip license agreement under which you obtained this file.
+ *
+ *  \file   ca_pipe2_ex.codal
+ *  \author Codasip
+ *  \date   09.02.2022
+ *  \brief  cycle accurate model
+ */
+
+#include "config.hcodal"
+#include "ca_defines.hcodal"
+
+// -------------------------------------------------------------------------------------------------
+// Decode stage
+// -------------------------------------------------------------------------------------------------
+
+event id : pipeline(pipe.IDEX)
+{
+    use inst_decode;
+    use id_output;
+
+    semantics
+    {
+        uint32 id_instr_temp;
+        uint32 temp_instr;
+        bool cache_ready, cache_response;
+        uint2 instr_control;
+        
+        // Set local stall.
+        s_id_stall = 0;
+
+        // Read the instruction from memory request in if-stage
+        if_fetch.transport(CP_PHS_DATA, cache_ready, cache_response, id_instr_temp); 
+
+        if (!cache_ready) s_id_icache_stall = true; // If i-cache not ready, stall instructions until i-cache is ready
+        else s_id_icache_stall = false;
+
+        instr_control = (uint1)(r_id_buffer_full) :: (uint1)(s_id_icache_stall || !id_instr_temp[0..0]);
+
+        switch (instr_control) {
+            case (uint2) 10:                // instruction buffer full, recovering from ID stage stall
+            case (uint2) 11:                // buffer has priority over instruction from memory or cache
+                s_id_instr = r_id_instr_preserved;
+                break;
+            case (uint2) 01:                // cache is stalled or instruction input is 0
+                s_id_instr = NOP_INSTRUCTION;
+                break;
+            case (uint2) 00:                // instruction from memory or i-cache
+                s_id_instr = id_instr_temp;
+                break;
+        }
+
+        // After obtaining the instruction word, all the values of the instruction word will be parsed into their individual
+        // signals.
+        // -------------------------------------------------------------------------------------------------
+        // Opcode
+        // -------------------------------------------------------------------------------------------------
+        s_id_opcode = s_id_instr[31..25] :: s_id_instr[14..12] :: s_id_instr[6..0];
+
+        // -------------------------------------------------------------------------------------------------
+        // Source register 1
+        // -------------------------------------------------------------------------------------------------
+        s_id_src1 = ;
+
+        // -------------------------------------------------------------------------------------------------
+        // Source register 2
+        // -------------------------------------------------------------------------------------------------
+        s_id_src2 = ;
+
+        // -------------------------------------------------------------------------------------------------
+        // Destination register
+        // -------------------------------------------------------------------------------------------------
+        s_id_rd = ;
+        
+        // -------------------------------------------------------------------------------------------------
+        // Register file
+        // -------------------------------------------------------------------------------------------------
+        s_id_rf_src1 = ;
+        s_id_rf_src2 = ;
+
+        // Preserve the current instruction decoded
+        if (cache_ready & !r_id_buffer_full) {
+            r_id_instr_preserved = s_id_instr;
+            r_id_pc_preserved = r_ifid_pc;
+        }
+
+        // -------------------------------------------------------------------------------------------------
+        // Decoder activation
+        // -------------------------------------------------------------------------------------------------
+        inst_decode(s_id_opcode);
+
+        // -------------------------------------------------------------------------------------------------
+        // Immediate decode
+        // -------------------------------------------------------------------------------------------------
+        s_id_imm_itype = ;
+        s_id_imm_stype = ;
+        s_id_imm_btype = (int32)(int13) (s_id_instr[31..31] :: s_id_instr[7..7] :: s_id_instr[30..25] :: s_id_instr[11..8] :: (uint1) 0);
+        s_id_imm_utype = ;
+        s_id_imm_jtype = ;
+
+        // -------------------------------------------------------------------------------------------------
+        // Immediate select
+        // -------------------------------------------------------------------------------------------------
+        switch (s_id_imm_gen_sel) {
+            case IMM_SEL_NONE:
+                s_id_src2_imm = DONT_CARE;
+                break;
+            case :
+                break;
+
+
+            default:
+                s_id_src2_imm = 0;
+                break;
+        }
+
+        // Update the pipeline registers between the Instruction Decode (ID) and Execute (EX) stages
+        id_output();
+    };
+};
+
+event id_output : pipeline(pipe.IDEX)
+{
+
+    semantics
+    {
+        // -----------------------------------------------------------------------------------------
+        // Pipeline registers
+        // -----------------------------------------------------------------------------------------
+        // PC value
+        r_idex_pc = r_ifid_pc;
+
+        // rs1 register file value
+        r_idex_rf_src1 = ;
+
+        // rs2 register file value
+        r_idex_rf_src2  = ;
+        // rs2 immediate
+        r_idex_src2_imm = ;
+
+        // rd value
+        r_idex_rd = ;
+
+        // regwrite value
+        r_idex_regwrite = ;
+
+        // aluop value
+        r_idex_aluop = ;
+
+        // src1 select
+        r_idex_src1_sl = ;
+
+        // src2 select
+        r_idex_src2_sl = ;
+
+        // decoder control-signals
+        r_idex_branch_inst = s_id_branch_inst;
+        r_idex_jump_inst = s_id_jump_inst;
+        r_idex_mem_ops = s_id_mem_ops;
+        r_idex_memread = s_id_memread;
+        r_idex_halt = s_id_halt;
+    };
+};

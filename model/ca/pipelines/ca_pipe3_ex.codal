@@ -1,0 +1,103 @@
+/**
+ * Codasip s.r.o.
+ *
+ * CONFIDENTIAL
+ *
+ * Copyright 2022 Codasip s.r.o.
+ *
+ * All Rights Reserved.
+ *
+ * NOTICE: All information contained in this file, is and shall remain the property of
+ * Codasip s.r.o. and its suppliers, if any.
+ *
+ * The intellectual and technical concepts contained herein are confidential and proprietary to
+ * Codasip s.r.o. and are protected by trade secret and copyright law.  In addition, elements of the
+ * technical concepts may be patent pending.
+ *
+ * This file is part of the Codasip Studio product. No part of the Studio product, including this
+ * file, may be use, copied, modified, or distributed except in accordance with the terms contained
+ * in Codasip license agreement under which you obtained this file.
+ *
+ *  \file   ca_pipe3_ex.codal
+ *  \author Codasip
+ *  \date   09.02.2022
+ *  \brief  cycle accurate model
+ */
+
+#include "ca_defines.hcodal"
+#include "debug.hcodal"
+
+// -------------------------------------------------------------------------------------------------
+// Execute Stage
+// -------------------------------------------------------------------------------------------------
+event ex : pipeline(pipe.EXMEM)
+{
+    use alu_operate;
+    use ex_output;
+
+    semantics
+    {
+
+        // ----------------------------------------------------------------------------------------------
+        // Source 1 Multiplexor
+        // ----------------------------------------------------------------------------------------------
+
+        // ----------------------------------------------------------------------------------------------
+        // Source 2 Multiplexor
+        // ----------------------------------------------------------------------------------------------
+
+        // ----------------------------------------------------------------------------------------------
+        // halt instruction
+        // ----------------------------------------------------------------------------------------------
+        if (r_idex_halt == true)
+        {
+            codasip_info(INFO_GENERAL, "Halt instruction indicated");
+//            codasip_store_exit_code(rf_xpr[GPR_RETVAL] & 0xFF);
+            #pragma simulator
+            {
+                codasip_halt();
+            }
+
+        }
+
+        // ----------------------------------------------------------------------------------------------
+        // ALU activation
+        // ----------------------------------------------------------------------------------------------
+        alu_operate();
+
+        // Update the pipeline registers between the Execute (EX) and MEMORY (MEM) stages
+        ex_output();
+    };
+};
+
+event alu_operate : pipeline(pipe.EXMEM)
+{
+    semantics
+    {
+        // ----------------------------------------------------------------------------------------------
+        // ALU
+        // ----------------------------------------------------------------------------------------------
+
+    };
+};
+
+
+event ex_output : pipeline(pipe.EXMEM)
+{
+    semantics
+    {
+        // -----------------------------------------------------------------------------------------
+        // Pipeline registers
+        // -----------------------------------------------------------------------------------------
+
+
+
+
+        // Passing Decoder control-signals to the EX stage
+        r_exmem_branch_inst = r_idex_branch_inst;
+        r_exmem_jump_inst = r_idex_jump_inst;
+        r_exmem_mem_ops = r_idex_mem_ops;
+        r_exmem_memread = r_idex_memread;
+    };
+};
+
