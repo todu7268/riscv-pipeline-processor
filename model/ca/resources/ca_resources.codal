@@ -63,6 +63,15 @@ signal bit[HALT_W] s_id_halt;
 
 //Instruction opcode + func3 + func7
 signal bit[OPC_W] s_id_opc;
+
+//Signals from Phase 4
+signal bit [RF_XPR_W] s_id_rs1;
+signal bit [RF_XPR_W] s_id_rs2;
+signal bit [WORD_W] s_id_immed;
+signal bit [RF_XPR_W] s_id_rd;
+signal bit [WORD_W] s_id_reg1;
+signal bit [WORD_W] s_id_reg2;
+
 // -------------------------------------------------------------------------------------------------
 // Execute stage
 // -------------------------------------------------------------------------------------------------
@@ -75,6 +84,17 @@ register bit[HALT_W] r_ex_halt            		{ pipeline = pipe.EX; };
 // ALU Operation Control
 register bit[ALUOP_W] r_ex_aluop        		{ pipeline = pipe.EX; };
 
+//Signals and registers from Phase 4
+signal bit [WORD_W] s_ex_src2;
+signal bit [WORD_W] s_ex_alu;
+
+register bit [RF_XPR_W] r_ex_rd  { pipeline = pipe.EX; };
+register bit [REGWRITE_W] r_ex_regwrite { pipeline = pipe.EX; };
+register bit [WORD_W] r_ex_reg1 { pipeline = pipe.EX; };
+register bit [SRC2_W] r_ex_alusrc2 { pipeline = pipe.EX; };
+register bit [WORD_W] r_ex_reg2 { pipeline = pipe.EX; };
+register bit [WORD_W] r_ex_immed { pipeline = pipe.EX; };
+
 // -------------------------------------------------------------------------------------------------
 // Memory stage
 // -------------------------------------------------------------------------------------------------
@@ -83,6 +103,11 @@ register bit[ALUOP_W] r_ex_aluop        		{ pipeline = pipe.EX; };
 register bit[ADDR_W] r_me_pc           			{ pipeline = pipe.ME; };
 register bit[INSTR_W] r_me_instr                { pipeline = pipe.ME; };
 
+//Registers from Phase 4
+register bit [REGWRITE_W] r_me_regwrite { pipeline = pipe.ME; };
+register bit [RF_XPR_W] r_me_rd { pipeline = pipe.ME; };
+register bit [RF_XPR_W] r_me_alu { pipeline = pipe.ME; };
+
 // -------------------------------------------------------------------------------------------------
 // Writeback stage
 // -------------------------------------------------------------------------------------------------
@@ -90,6 +115,11 @@ register bit[INSTR_W] r_me_instr                { pipeline = pipe.ME; };
 // Pipelined Program Counter + Instruction
 register bit[ADDR_W] r_wb_pc            		{ pipeline = pipe.WB; };
 register bit[INSTR_W] r_wb_instr                { pipeline = pipe.WB; };
+
+//Registers from Phase 4
+register bit [RF_XPR_W] r_wb_rd { pipeline = pipe.WB; };
+register bit [RF_XPR_W] r_wb_alu { pipeline = pipe.WB; };
+register bit [REGWRITE_W] r_wb_regwrite { pipeline = pipe.WB; };
 
 // -------------------------------------------------------------------------------------------------
 // Pipeline control

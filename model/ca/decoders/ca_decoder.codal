@@ -36,7 +36,7 @@
 
 set dec = i_hw_halt
                 ,i_hw_alu
-                // ,i_hw_alu_i
+                ,i_hw_alu_i
                 ;
 
 // -------------------------------------------------------------------------------------------------
@@ -102,3 +102,35 @@ element i_hw_alu
         s_id_halt = HALT_NOHALT;
     };
 };
+
+//I_HW_ALU_I Implementation, most copy pasted from I_HW_ALU, changed to I-type
+element i_hw_alu_i
+{
+    use opc_itype_alu as opc;
+
+    assembly { opc };
+    binary { opc };
+
+    semantics
+    {
+        // Register file write enable
+        s_id_regwrite = WE_TRUE;
+
+        switch (opc)
+        {
+            case ITYPE_ADD:
+                s_id_aluop = ITYPE_ADDI;
+                break;
+
+            default:
+                codasip_fatal(ALU_ERROR, "Default case: %d\n", opc);
+                break;
+        }
+
+        // Operand MUXes
+        s_id_alusrc2 = ALU2_IMM;
+
+        // HALT Command
+        s_id_halt = HALT_NOHALT;
+    };
+}; 

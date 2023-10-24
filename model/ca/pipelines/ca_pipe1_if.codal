@@ -59,5 +59,7 @@ event if_output : pipeline(pipe.IF)
 {
     semantics
     {
+        if_code.transport(CP_PHS_ADDRESS, CP_AHB_NONSEQ, CP_AHB_READ, r_pc, CP_AHB_SIZE_32);
+        
     };
 };
