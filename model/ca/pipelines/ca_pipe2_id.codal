@@ -57,6 +57,27 @@ event id_output : pipeline(pipe.ID)
         // -----------------------------------------------------------------------------------------
         // Pipeline output
         // -----------------------------------------------------------------------------------------
+        uint32 id_instr_temp;
+        bool cache_ready, cache_response;
 
+        if_fetch.transport(CP_PHS_DATA, cache_ready, cache_response, id_instr_temp);
+        s_id_instr = r_id_clear? NOP_INSTRUCTION: id_instr_temp;
+        
+        //Opcode
+        s_id_opc = s_id_instr[31..25] :: s_id_instr[14..12] :: s_id_instr[6..0];
+        //Source registers
+        s_id_rs1 = s_id_instr[19..15];
+        s_id_rs2 = s_id_instr[24..20];
+        //Destination register
+        s_id_rd = s_id_instr[11..7];
+        //immediate
+        s_id_immed = (int32)(int12)s_id_instr[31..20];
+
+        //Reading the input registers
+        s_id_reg1 = rf_xpr.src1[s_id_rs1];
+        s_id_reg2 = rf_xpr.src2[s_id_rs2];
+
+        //Assignments for all of the registers
+        
     };
 };
