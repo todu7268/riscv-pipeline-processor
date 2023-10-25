@@ -45,6 +45,7 @@ event me_output : pipeline(pipe.ME)
 {
     semantics
     {
-
+        //Assigning all the registers
+        
     };
 };
