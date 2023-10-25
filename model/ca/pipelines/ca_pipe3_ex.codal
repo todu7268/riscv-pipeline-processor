@@ -51,8 +51,39 @@ event ex : pipeline(pipe.EX)
 
 event ex_output : pipeline(pipe.EX)
 {
+    
     semantics
     {
+        //Implementing multiplexor
+        switch (r_ex_alusrc2){
+            case ALU2_REG:
+                s_ex_src2 = r_ex_reg2;
+                break;
+            case ALU2_IMM:
+                s_ex_src2 = r_ex_immed;
+                break;
+            default:
+                s_ex_src2 = 0;
+                codasip_fatal(SRC2_ERROR, "Default case: %d \n", r_ex_alusrc2);
+                break;
+        }
 
+        switch (r_ex_aluop){
+            //Nop
+            case ALU_NOP:
+                s_ex_alu = 0;
+                break;
+    
+            //Add
+            case ALU_ADD:
+                //check in OH if this is even correct
+                s_ex_alu = 1;
+                break;
+
+            default:
+                // codasip_fatal(something, "Default case %d \n", r_ex_aluop);
+                break;
+            
+        }
     };
 };
