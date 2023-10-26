@@ -26,7 +26,6 @@
 
 #include "config.hcodal"
 #include "ca_defines.hcodal"
-
 // -------------------------------------------------------------------------------------------------
 // Decode stage
 // -------------------------------------------------------------------------------------------------
@@ -37,18 +36,14 @@ event id : pipeline(pipe.ID)
     use id_output;
 
     semantics
-    {
+    {   
+        uint32 id_instr_temp;
+        bool cache_ready, cache_response;
 
         // Set local stall.
         s_id_stall = 0;
 
-        // Decoder activation
-        dec(s_id_opc);
-
-        uint32 id_instr_temp;
-        bool cache_ready, cache_response;
-
-        if_fetch.transport(CP_PHS_DATA, cache_ready, cache_response, id_instr_temp);
+        if_code.transport(CP_PHS_DATA, cache_ready, cache_response, id_instr_temp);
         s_id_instr = r_id_clear? NOP_INSTRUCTION: id_instr_temp;
         
         //Opcode
@@ -65,10 +60,14 @@ event id : pipeline(pipe.ID)
         s_id_reg1 = rf_xpr.src1[s_id_rs1];
         s_id_reg2 = rf_xpr.src2[s_id_rs2];
 
+        // Decoder activation
+        dec(s_id_opc);
+
         // Update the registers
         id_output();
     };
 };
+
 event id_output : pipeline(pipe.ID)
 {
 

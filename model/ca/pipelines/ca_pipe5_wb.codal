@@ -27,7 +27,7 @@
 // -------------------------------------------------------------------------------------------------
 // Write-Back Stage
 // -------------------------------------------------------------------------------------------------
-
+#include "debug.hcodal"
 event wb : pipeline(pipe.WB)
 {
     semantics
@@ -38,7 +38,7 @@ event wb : pipeline(pipe.WB)
             if (r_wb_rd == 0); //Do nothing if r_wb_rd == 0
             else{
                 rf_xpr.wrt0[r_wb_rd] = r_wb_alu;
-                codasip_info(INFO_RW_WRITE, "rf_xpr[%d] = 0x%x", r_wb_rd, r_wb_alu);
+                codasip_info(INFO_RF_WRITE, "rf_xpr[%d] = 0x%x", r_wb_rd, r_wb_alu);
             }
         }
 
