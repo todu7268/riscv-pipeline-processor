@@ -87,7 +87,7 @@ element i_hw_alu
         switch (opc)
         {
             case RTYPE_ADD:
-                s_id_aluop = RTYPE_ADD;
+                s_id_aluop = ALU_ADD;
                 break;
 
             default:
@@ -118,8 +118,8 @@ element i_hw_alu_i
 
         switch (opc)
         {
-            case ITYPE_ADD:
-                s_id_aluop = ITYPE_ADDI;
+            case ITYPE_ADDI:
+                s_id_aluop = ALU_ADD;
                 break;
 
             default:

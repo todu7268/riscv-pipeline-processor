@@ -35,8 +35,11 @@ event wb : pipeline(pipe.WB)
         //Code to write to register file
         //Need to make 1 minor modification
         if (r_wb_regwrite){
-            rf_xpr.wrt0[r_wb_rd] = r_wb_alu;
-            codasip_info(INFO_RW_WRITE, "rf_xpr[%d] = 0x%x", r_wb_rd, r_wb_alu);
+            if (r_wb_rd == 0); //Do nothing if r_wb_rd == 0
+            else{
+                rf_xpr.wrt0[r_wb_rd] = r_wb_alu;
+                codasip_info(INFO_RW_WRITE, "rf_xpr[%d] = 0x%x", r_wb_rd, r_wb_alu);
+            }
         }
 
         // Set local stall.

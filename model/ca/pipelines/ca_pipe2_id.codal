@@ -45,18 +45,6 @@ event id : pipeline(pipe.ID)
         // Decoder activation
         dec(s_id_opc);
 
-        // Update the registers
-        id_output();
-    };
-};
-event id_output : pipeline(pipe.ID)
-{
-
-    semantics
-    {
-        // -----------------------------------------------------------------------------------------
-        // Pipeline output
-        // -----------------------------------------------------------------------------------------
         uint32 id_instr_temp;
         bool cache_ready, cache_response;
 
@@ -77,7 +65,28 @@ event id_output : pipeline(pipe.ID)
         s_id_reg1 = rf_xpr.src1[s_id_rs1];
         s_id_reg2 = rf_xpr.src2[s_id_rs2];
 
-        //Assignments for all of the registers
+        // Update the registers
+        id_output();
+    };
+};
+event id_output : pipeline(pipe.ID)
+{
+
+    semantics
+    {
+        // -----------------------------------------------------------------------------------------
+        // Pipeline output
+        // -----------------------------------------------------------------------------------------
+        r_ex_pc = r_id_pc;
+        r_ex_instr = s_id_instr;
+        r_ex_halt = s_id_halt;
+        r_ex_aluop = s_id_aluop;  
+        r_ex_rd = s_id_rd;
+        r_ex_regwrite = s_id_regwrite;
+        r_ex_reg1 = s_id_reg1;
+        r_ex_alusrc2 = s_id_alusrc2; 
+        r_ex_reg2 = s_id_reg2;
+        r_ex_immed = s_id_immed;
         
     };
 };

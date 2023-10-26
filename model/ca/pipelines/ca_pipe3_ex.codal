@@ -44,16 +44,6 @@ event ex : pipeline(pipe.EX)
             codasip_info(INFO_GENERAL, "Halt Instructions Indicated");
         }
 
-        // Timing
-        ex_output();
-    };
-};
-
-event ex_output : pipeline(pipe.EX)
-{
-    
-    semantics
-    {
         //Implementing multiplexor
         switch (r_ex_alusrc2){
             case ALU2_REG:
@@ -77,13 +67,30 @@ event ex_output : pipeline(pipe.EX)
             //Add
             case ALU_ADD:
                 //check in OH if this is even correct
-                s_ex_alu = 1;
+                s_ex_alu = r_ex_reg1 + s_ex_src2;
                 break;
 
             default:
-                // codasip_fatal(something, "Default case %d \n", r_ex_aluop);
+                codasip_fatal(ALU_ERROR, "Default case %d \n", r_ex_aluop);
                 break;
             
         }
+
+        // Timing
+        ex_output();
+    };
+};
+
+event ex_output : pipeline(pipe.EX)
+{
+    
+    semantics
+    {
+        //Assignments for all registers
+        r_me_pc = r_ex_pc;
+        r_me_instr = r_ex_instr;
+        r_me_regwrite = r_ex_regwrite;
+        r_me_rd = r_ex_rd;
+        r_me_alu = s_ex_alu;
     };
 };

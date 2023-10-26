@@ -46,6 +46,10 @@ event me_output : pipeline(pipe.ME)
     semantics
     {
         //Assigning all the registers
-        
+        r_wb_pc = r_me_pc;
+        r_wb_instr = r_me_instr;
+        r_wb_regwrite = r_me_regwrite;
+        r_wb_rd = r_me_rd;
+        r_wb_alu = r_me_alu;
     };
 };
