@@ -106,7 +106,7 @@ register bit[INSTR_W] r_me_instr                { pipeline = pipe.ME; };
 //Registers from Phase 4
 register bit [REGWRITE_W] r_me_regwrite { pipeline = pipe.ME; };
 register bit [RF_XPR_W] r_me_rd { pipeline = pipe.ME; };
-register bit [RF_XPR_W] r_me_alu { pipeline = pipe.ME; };
+register bit [WORD_W] r_me_alu { pipeline = pipe.ME; };
 
 // -------------------------------------------------------------------------------------------------
 // Writeback stage
@@ -118,7 +118,7 @@ register bit[INSTR_W] r_wb_instr                { pipeline = pipe.WB; };
 
 //Registers from Phase 4
 register bit [RF_XPR_W] r_wb_rd { pipeline = pipe.WB; };
-register bit [RF_XPR_W] r_wb_alu { pipeline = pipe.WB; };
+register bit [WORD_W] r_wb_alu { pipeline = pipe.WB; };
 register bit [REGWRITE_W] r_wb_regwrite { pipeline = pipe.WB; };
 
 // -------------------------------------------------------------------------------------------------
