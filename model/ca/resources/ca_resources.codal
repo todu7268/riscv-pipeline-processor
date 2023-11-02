@@ -72,6 +72,12 @@ signal bit [RF_XPR_W] s_id_rd;
 signal bit [WORD_W] s_id_reg1;
 signal bit [WORD_W] s_id_reg2;
 
+//Phase 6 Register File Forwarding Signals
+signal bit [RFF1_W] s_rff1_sel;
+signal bit [RFF2_W] s_rff2_sel;
+signal bit [WORD_W] s_id_mux1; //Output of mux1 in ID
+signal bit [WORD_W] s_id_mux2; //Output of mux2 in ID
+
 // -------------------------------------------------------------------------------------------------
 // Execute stage
 // -------------------------------------------------------------------------------------------------
@@ -94,6 +100,13 @@ register bit [WORD_W] r_ex_reg1 { pipeline = pipe.EX; };
 register bit [SRC2_W] r_ex_alusrc2 { pipeline = pipe.EX; };
 register bit [WORD_W] r_ex_reg2 { pipeline = pipe.EX; };
 register bit [WORD_W] r_ex_immed { pipeline = pipe.EX; };
+
+//Phase 6 Data Hazard Forwarding Signals
+signal bit [FWDA_W] s_ex_fwdA_sl;
+signal bit [FWDB_W] s_ex_fwdB_sl;
+signal bit [WORD_W] s_ex_src1; //output of mux1 in EX
+signal bit [WORD_W] s_ex_mux2; //output of mux2 in EX
+
 
 // -------------------------------------------------------------------------------------------------
 // Memory stage
