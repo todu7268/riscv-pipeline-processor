@@ -59,6 +59,40 @@ event id : pipeline(pipe.ID)
         //Reading the input registers
         s_id_reg1 = rf_xpr.src1[s_id_rs1];
         s_id_reg2 = rf_xpr.src2[s_id_rs2];
+        
+        //Phase 6 Register File Forwarding, Listing 1
+        //RFF1 control
+        if ((r_wb_rd == s_id_src1) and (r_wb_rd != 0) and (r_wb_regwrite)) s_rff1_sel = 0;
+        else s_rff1_sel = 1;
+
+        //RFF2 control
+        if ((r_wb_rd == s_id_src2) and (r_wb_rd != 0) and (r_wb_regwrite)) s_rff2_sel = 0;
+        else s_rff2_sel = 1;
+
+        //Phase 6 Register File Forwarding Muxes
+        switch(s_rff1_sel){
+            case RFF1_REG:
+                s_id_mux1 = s_id_reg1; //Read from register file
+                break;
+            case RFF1_FWD:
+                s_id_mux1 = r_wb_alu; //Forwarded
+                break;
+            default:
+                s_id_mux1 = 0;
+                break;
+        }
+
+        switch(s_rff2_sel){
+            case RFF2_REG:
+                s_id_mux2 = s_id_reg2; //Read from register file
+                break;
+            case RFF2_FWD:
+                s_id_mux2 = r_wb_alu; //Forwarded
+                break;
+            default:
+                s_id_mux2 = 0;
+                break;
+        }
 
         // Decoder activation
         dec(s_id_opc);
@@ -83,10 +117,14 @@ event id_output : pipeline(pipe.ID)
         r_ex_aluop = s_id_aluop;  
         r_ex_rd = s_id_rd;
         r_ex_regwrite = s_id_regwrite;
-        r_ex_reg1 = s_id_reg1;
         r_ex_alusrc2 = s_id_alusrc2; 
-        r_ex_reg2 = s_id_reg2;
         r_ex_immed = s_id_immed;
         
+        r_ex_reg1 = s_id_reg1;
+        r_ex_reg2 = s_id_reg2;
+
+        //Adding src1 and src2 outputs
+        r_ex_src1 = s_id_mux1;
+        r_ex_src2 = s_id_mux2;
     };
 };
