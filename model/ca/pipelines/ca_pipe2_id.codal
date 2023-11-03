@@ -120,8 +120,8 @@ event id_output : pipeline(pipe.ID)
         r_ex_alusrc2 = s_id_alusrc2; 
         r_ex_immed = s_id_immed;
         
-        r_ex_reg1 = s_id_reg1;
-        r_ex_reg2 = s_id_reg2;
+        r_ex_reg1 = s_id_rs1;
+        r_ex_reg2 = s_id_rs2;
 
         //Adding src1 and src2 outputs
         r_ex_src1 = s_id_mux1;
