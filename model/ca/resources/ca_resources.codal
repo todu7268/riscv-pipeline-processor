@@ -96,9 +96,9 @@ signal bit [WORD_W] s_ex_alu;
 
 register bit [RF_XPR_W] r_ex_rd  { pipeline = pipe.EX; };
 register bit [REGWRITE_W] r_ex_regwrite { pipeline = pipe.EX; };
-register bit [WORD_W] r_ex_reg1 { pipeline = pipe.EX; }; //no longer needed, register passed thru src1
+register bit [RF_XPR_W] r_ex_reg1 { pipeline = pipe.EX; }; 
 register bit [SRC2_W] r_ex_alusrc2 { pipeline = pipe.EX; };
-register bit [WORD_W] r_ex_reg2 { pipeline = pipe.EX; }; //no longer needed, register passed thru src2
+register bit [RF_XPR_W] r_ex_reg2 { pipeline = pipe.EX; }; 
 register bit [WORD_W] r_ex_immed { pipeline = pipe.EX; };
 
 //Phase 6 Data Hazard Forwarding Signals
