@@ -62,12 +62,12 @@ event id : pipeline(pipe.ID)
         
         //Phase 6 Register File Forwarding, Listing 1
         //RFF1 control
-        if ((r_wb_rd == s_id_src1) and (r_wb_rd != 0) and (r_wb_regwrite)) s_rff1_sel = 0;
-        else s_rff1_sel = 1;
+        if ((r_wb_rd == s_id_rs1) && (r_wb_rd != 0) && (r_wb_regwrite)) s_rff1_sel = 1; //Forward
+        else s_rff1_sel = 0; //Reg File Read
 
         //RFF2 control
-        if ((r_wb_rd == s_id_src2) and (r_wb_rd != 0) and (r_wb_regwrite)) s_rff2_sel = 0;
-        else s_rff2_sel = 1;
+        if ((r_wb_rd == s_id_rs2) && (r_wb_rd != 0) && (r_wb_regwrite)) s_rff2_sel = 1; //Forward
+        else s_rff2_sel = 0; //Reg File Read
 
         //Phase 6 Register File Forwarding Muxes
         switch(s_rff1_sel){

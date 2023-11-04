@@ -44,10 +44,52 @@ event ex : pipeline(pipe.EX)
             codasip_info(INFO_GENERAL, "Halt Instructions Indicated");
         }
 
-        //Implementing multiplexor
+        //Phase 6 Implementation
+        //if-else statements for the FWDCTL
+        if ((r_wb_rd == r_ex_reg1) && (r_wb_regwrite) && (r_wb_rd != 0)) s_rff1_sel = 1; //Forward from WB
+        else if ((r_me_rd == r_ex_reg1) && (r_me_regwrite) && (r_me_rd != 0)) s_rff1_sel = 2; //Forward from ME
+        else s_rff1_sel = 0; //Reg File Read
+
+        if ((r_wb_rd == r_ex_reg2) && (r_wb_regwrite) && (r_wb_rd != 0)) s_rff2_sel = 1; //Forward from WB
+        else if ((r_me_rd == r_ex_reg2) && (r_me_regwrite) && (r_me_rd != 0)) s_rff2_sel = 2; //Forward from ME
+        else s_rff2_sel = 0; //Reg File Read
+
+        //3-1 Multiplexors based on fwdA and fwdB
+        //fwdA multiplexor
+        switch(s_ex_fwdA_sl){
+            case FWDA_REG:
+                s_ex_src1 = r_ex_src1; //from the previous stage
+                break;
+            case FWDA_WB:
+                s_ex_src1 = r_wb_alu; //from WB
+                break;
+            case FWDA_MEM:
+                s_ex_src1 = r_me_alu; //from ME
+                break;
+            default:
+                s_ex_src1 = 0;
+                break;
+        }
+        //fwdB multiplexor
+        switch(s_ex_fwdB_sl){
+            case FWDB_REG:
+                s_ex_mux2 = r_ex_src2; //from previous stage
+                break;
+            case FWDB_WB:
+                s_ex_mux2 = r_wb_alu; //from WB
+                break;
+            case FWDB_MEM:
+                s_ex_mux2 = r_me_alu; //from ME
+                break;
+            default:
+                s_ex_mux2 = 0;
+                break;
+        }
+
+        //Implementing multiplexor (Modifications here for Phase 6)
         switch (r_ex_alusrc2){
             case ALU2_REG:
-                s_ex_src2 = r_ex_reg2;
+                s_ex_src2 = s_ex_mux2;
                 break;
             case ALU2_IMM:
                 s_ex_src2 = r_ex_immed;
@@ -66,8 +108,7 @@ event ex : pipeline(pipe.EX)
     
             //Add
             case ALU_ADD:
-                //check in OH if this is even correct
-                s_ex_alu = r_ex_reg1 + s_ex_src2;
+                s_ex_alu = s_ex_src1 + s_ex_src2;
                 break;
 
             default:
