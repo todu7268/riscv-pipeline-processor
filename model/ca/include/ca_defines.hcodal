@@ -92,13 +92,13 @@ enum halt
 enum rff1_sel 
 {
     RFF1_REG,
-    RFF1_FWD
+    RFF1_FWD,
 };
 
 enum rff2_sel
 {
     RFF2_REG,
-    RFF2_FWD
+    RFF2_FWD,
 };
 
 //Phase 6 Data Hazard Forwarding Enums
@@ -106,14 +106,14 @@ enum fwdA_sel
 {
     FWDA_REG,
     FWDA_WB,
-    FWDA_MEM
+    FWDA_MEM,
 };
 
 enum fwdB_sel
 {
     FWDB_REG,
     FWDB_WB,
-    FWDB_MEM
+    FWDB_MEM,
 };
 
 // -------------------------------------------------------------------------------------------------

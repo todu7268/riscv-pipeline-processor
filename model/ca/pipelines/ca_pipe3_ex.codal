@@ -46,13 +46,13 @@ event ex : pipeline(pipe.EX)
 
         //Phase 6 Implementation
         //if-else statements for the FWDCTL
-        if ((r_wb_rd == r_ex_reg1) && (r_wb_regwrite) && (r_wb_rd != 0)) s_rff1_sel = 1; //Forward from WB
-        else if ((r_me_rd == r_ex_reg1) && (r_me_regwrite) && (r_me_rd != 0)) s_rff1_sel = 2; //Forward from ME
-        else s_rff1_sel = 0; //Reg File Read
+        if ((r_wb_rd == r_ex_reg1) && (r_wb_regwrite) && (r_wb_rd != 0)) s_ex_fwdA_sl = 1; //Forward from WB
+        else if ((r_me_rd == r_ex_reg1) && (r_me_regwrite) && (r_me_rd != 0)) s_ex_fwdA_sl = 2; //Forward from ME
+        else s_ex_fwdA_sl = 0; //Reg File Read
 
-        if ((r_wb_rd == r_ex_reg2) && (r_wb_regwrite) && (r_wb_rd != 0)) s_rff2_sel = 1; //Forward from WB
-        else if ((r_me_rd == r_ex_reg2) && (r_me_regwrite) && (r_me_rd != 0)) s_rff2_sel = 2; //Forward from ME
-        else s_rff2_sel = 0; //Reg File Read
+        if ((r_wb_rd == r_ex_reg2) && (r_wb_regwrite) && (r_wb_rd != 0)) s_ex_fwdB_sl = 1; //Forward from WB
+        else if ((r_me_rd == r_ex_reg2) && (r_me_regwrite) && (r_me_rd != 0)) s_ex_fwdB_sl = 2; //Forward from ME
+        else s_ex_fwdB_sl = 0; //Reg File Read
 
         //3-1 Multiplexors based on fwdA and fwdB
         //fwdA multiplexor
