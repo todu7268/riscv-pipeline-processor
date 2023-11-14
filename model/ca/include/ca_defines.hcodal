@@ -47,6 +47,12 @@
 #define FWDA_W bitsizeof(enum fwdA_sel)
 #define FWDB_W bitsizeof(enum fwdB_sel)
 
+//Phase 7 Macros
+#define SRC1_W bitsizeof(enum src1)
+#define BRANCH_W bitsizeof(enum branchop)
+#define RFWT_W bitsizeof(enum rfwt_sel)
+#define BRNCH_SEL bitsizeof(enum branch_sel)
+
 // -------------------------------------------------------------------------------------------------
 // Enumerations
 // -------------------------------------------------------------------------------------------------
@@ -114,6 +120,44 @@ enum fwdB_sel
     FWDB_REG,
     FWDB_WB,
     FWDB_MEM,
+};
+
+//Phase 7 Enums
+enum src1 
+{
+    ALU_SRC1_ZERO,
+    ALU_SRC1_REG,
+    ALU_SRC1_PC
+};
+
+enum immed
+{
+    IMM_iTYPE,
+    IMM_bTYPE,
+    IMM_jTYPE,
+    IMM_uTYPE,
+    IMM_sTYPE
+};
+
+enum branchop
+{
+    BRANCH_FALSE,
+    BRANCH_TRUE,
+    BRANCH_COND_TRUE,
+    BRANCH_COND_FALSE
+};
+
+enum rfwt_sel
+{
+    RFWT_ALU,
+    RFWT_PC,
+    RFWT_MEM
+};
+
+enum branch_sel
+{
+    BRADD_ALU,
+    BRADD_ADDR
 };
 
 // -------------------------------------------------------------------------------------------------
