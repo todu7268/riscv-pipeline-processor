@@ -70,10 +70,25 @@
 // -------------------------------------------------------------------------------------------------
 
 // ALU function codes
+//Phase 7 instructions added:
+//and, sub, or, xor, slt, sltu, sll, srl, sra
+//andi, ori, xori, slti, sltiu, slli, srli, srai
+//beq, bne, blt, bge, bltu, bgeu, jal, jalr
+//auipc, lui
+
 enum aluop
 {
     ALU_NOP,
     ALU_ADD,
+    ALU_SUB,
+    ALU_SLL,
+    ALU_SLT,
+    ALU_SLTU,
+    ALU_XOR,
+    ALU_SRL,
+    ALU_SRA,
+    ALU_OR,
+    ALU_AND
 };
 
 enum regwrite
@@ -143,8 +158,8 @@ enum branchop
 {
     BRANCH_FALSE,
     BRANCH_TRUE,
-    BRANCH_COND_TRUE,
-    BRANCH_COND_FALSE
+    BRANCH_COND_FALSE,
+    BRANCH_COND_TRUE
 };
 
 enum rfwt_sel
