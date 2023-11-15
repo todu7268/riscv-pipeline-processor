@@ -65,6 +65,14 @@ element i_hw_halt
 
         // HALT Command
         s_id_halt = HALT_HALT;
+        
+        //Added signals for phase 7:
+        //Set all these to don't care because it's a halt instruction
+        s_id_immsel = DONT_CARE;
+        s_id_brnchop = DONT_CARE;
+        s_id_rfwt_sel = DONT_CARE;
+        s_id_brnch_sel = DONT_CARE;
+        s_id_alusrc1 = DONT_CARE;
     };
 };
 
@@ -89,7 +97,33 @@ element i_hw_alu
             case RTYPE_ADD:
                 s_id_aluop = ALU_ADD;
                 break;
-
+            case RTYPE_SUB:
+                s_id_aluop = ALU_SUB;
+                break;
+            case RTYPE_SLL:
+                s_id_aluop = ALU_SLL;
+                break;
+            case RTYPE_SLT:
+                s_id_aluop = ALU_SLT;
+                break;
+            case RTYPE_SLTU:
+                s_id_aluop = ALU_SLTU;
+                break;
+            case RTYPE_XOR:
+                s_id_aluop = ALU_XOR;
+                break;
+            case RTYPE_SRL:
+                s_id_aluop = ALU_SRL;
+                break;
+            case RTYPE_SRA:
+                s_id_aluop = ALU_SRA;
+                break;
+            case RTYPE_OR:
+                s_id_aluop = ALU_OR;
+                break;
+            case RTYPE_AND:
+                s_id_aluop = ALU_AND;
+                break;
             default:
                 codasip_fatal(ALU_ERROR, "Default case: %d\n", opc);
                 break;
@@ -100,6 +134,13 @@ element i_hw_alu
 
         // HALT Command
         s_id_halt = HALT_NOHALT;
+
+        //Phase 7:
+        s_id_immsel = IMM_NONE;
+        s_id_brnchop = BRANCH_FALSE;
+        s_id_rfwt_sel = RFWT_PC;
+        s_id_brnch_sel = BRADD_ADDR;
+        s_id_alusrc1 = ALU_SRC1_REG;
     };
 };
 
@@ -121,7 +162,21 @@ element i_hw_alu_i
             case ITYPE_ADDI:
                 s_id_aluop = ALU_ADD;
                 break;
-
+            case ITYPE_SLTI:
+                s_id_aluop = ALU_SLT;
+                break;
+            case ITYPE_SLTIU:
+                s_id_aluop = ALU_SLT;
+                break;
+            case ITYPE_XORI:
+                s_id_aluop = ALU_XOR;
+                break;
+            case ITYPE_ORI:
+                s_id_aluop = ALU_OR;
+                break;
+            case ITYPE_ANDI:
+                s_id_aluop = ALU_AND;
+                break;
             default:
                 codasip_fatal(ALU_ERROR, "Default case: %d\n", opc);
                 break;
@@ -132,5 +187,13 @@ element i_hw_alu_i
 
         // HALT Command
         s_id_halt = HALT_NOHALT;
+
+        //Phase 7:
+        s_id_immsel = IMM_iTYPE;
+        s_id_brnchop = BRANCH_FALSE;
+        s_id_rfwt_sel = RFWT_PC;
+        s_id_brnch_sel = BRADD_ADDR;
+        s_id_alusrc1 = ALU_SRC1_REG;
     };
 }; 
+

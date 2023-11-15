@@ -147,6 +147,7 @@ enum src1
 
 enum immed
 {
+    IMM_NONE, //Added because instructions in 2.2 say we need to use IMM_NONE when we don't need immediate
     IMM_iTYPE,
     IMM_bTYPE,
     IMM_jTYPE,
