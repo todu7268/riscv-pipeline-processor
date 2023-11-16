@@ -78,6 +78,9 @@ signal bit [RFF2_W] s_rff2_sel;
 signal bit [WORD_W] s_id_mux1; //Output of mux1 in ID
 signal bit [WORD_W] s_id_mux2; //Output of mux2 in ID
 
+//Phase 7 Signals
+signal bit [SRC1_W] s_id_alusrc1;
+signal bit [] s_id_immsel;
 // -------------------------------------------------------------------------------------------------
 // Execute stage
 // -------------------------------------------------------------------------------------------------

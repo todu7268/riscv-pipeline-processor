@@ -52,6 +52,7 @@
 #define BRANCH_W bitsizeof(enum branchop)
 #define RFWT_W bitsizeof(enum rfwt_sel)
 #define BRNCH_SEL bitsizeof(enum branch_sel)
+#define IMMSEL_W bitsizeof(enum immed) //Not in the instructions, but added for immsel width in ca_decoder.codal
 
 // -------------------------------------------------------------------------------------------------
 // Enumerations
