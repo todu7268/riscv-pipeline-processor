@@ -274,23 +274,24 @@ element i_hw_btype_branches
                 break;
             case BTYPE_BLT:
                 s_id_aluop = ALU_SLT;
-                s_id_brnchop = BRANCH_COND_TRUE;
+                s_id_brnchop = BRANCH_COND_FALSE;
                 break;
             case BTYPE_BGE:
                 s_id_aluop = ALU_SLT;
-                s_id_brnchop = BRANCH_COND_FALSE;
+                s_id_brnchop = BRANCH_COND_TRUE;
                 break;
             case BTYPE_BLTU:
                 s_id_aluop = ALU_SLTU;
-                s_id_brnchop = BRANCH_COND_TRUE;
+                s_id_brnchop = BRANCH_COND_FALSE;
                 break;
             case BTYPE_BGEU:
                 s_id_aluop = ALU_SLTU;
-                s_id_brnchop = BRANCH_COND_FALSE;
+                s_id_brnchop = BRANCH_COND_TRUE;
                 break;
             default:
                 s_id_aluop = ALU_NOP;
                 s_id_brnchop = BRANCH_COND_FALSE;
+                codasip_fatal(ALU_ERROR, "Default case: %d\n", opc);
                 break;
         }
 
@@ -359,7 +360,7 @@ element i_hw_itype_jlreg
     {
         // Register file write enable
         s_id_regwrite = WE_TRUE;
-        s_id_rfwt_sel = RFWT_ALU;
+        s_id_rfwt_sel = RFWT_PC;
 
         switch (opc)
         {
@@ -380,8 +381,8 @@ element i_hw_itype_jlreg
         //Phase 7:
         s_id_immsel = IMM_iTYPE; //i-type immediate
         s_id_brnchop = BRANCH_TRUE; //always branch here
-        s_id_brnch_sel = BRADD_ALU; //ALU?
-        s_id_alusrc1 = ALU_SRC1_PC; //PC?
+        s_id_brnch_sel = BRADD_ALU;
+        s_id_alusrc1 = ALU_SRC1_REG;
     };
 };
 
@@ -399,7 +400,7 @@ element i_hw_itype_jlink
     {
         // Register file write enable
         s_id_regwrite = WE_TRUE;
-        s_id_rfwt_sel = RFWT_ALU;
+        s_id_rfwt_sel = RFWT_PC;
 
         switch (opc)
         {
@@ -420,7 +421,7 @@ element i_hw_itype_jlink
         //Phase 7:
         s_id_immsel = IMM_jTYPE; //JAL uses j-type immediate (according to risc-v manual)
         s_id_brnchop = BRANCH_TRUE; //always branch
-        s_id_brnch_sel = BRADD_ALU; //ALU?
-        s_id_alusrc1 = ALU_SRC1_PC; //PC?
+        s_id_brnch_sel = BRADD_ADDR; 
+        s_id_alusrc1 = DONT_CARE; 
     };
 };
