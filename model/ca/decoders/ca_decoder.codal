@@ -37,7 +37,9 @@
 set dec = i_hw_halt
                 ,i_hw_alu
                 ,i_hw_alu_i
-                i_hw_alu_special;
+                ,i_hw_alu_special
+                ,i_hw_btype_branches
+                ;
 
 // -------------------------------------------------------------------------------------------------
 // Halt instruction
@@ -91,6 +93,7 @@ element i_hw_alu
     {
         // Register file write enable
         s_id_regwrite = WE_TRUE;
+        s_id_rfwt_sel = RFWT_ALU;
 
         switch (opc)
         {
@@ -138,7 +141,6 @@ element i_hw_alu
         //Phase 7:
         s_id_immsel = IMM_NONE;
         s_id_brnchop = BRANCH_FALSE;
-        s_id_rfwt_sel = RFWT_PC;
         s_id_brnch_sel = BRADD_ADDR;
         s_id_alusrc1 = ALU_SRC1_REG;
     };
@@ -152,10 +154,13 @@ element i_hw_alu_i
     assembly { opc };
     binary { opc };
 
+    
+
     semantics
     {
         // Register file write enable
         s_id_regwrite = WE_TRUE;
+        s_id_rfwt_sel = RFWT_ALU;
 
         switch (opc)
         {
@@ -166,7 +171,7 @@ element i_hw_alu_i
                 s_id_aluop = ALU_SLT;
                 break;
             case ITYPE_SLTIU:
-                s_id_aluop = ALU_SLT;
+                s_id_aluop = ALU_SLTU;
                 break;
             case ITYPE_XORI:
                 s_id_aluop = ALU_XOR;
@@ -191,12 +196,12 @@ element i_hw_alu_i
         //Phase 7:
         s_id_immsel = IMM_iTYPE;
         s_id_brnchop = BRANCH_FALSE;
-        s_id_rfwt_sel = RFWT_PC;
         s_id_brnch_sel = BRADD_ADDR;
         s_id_alusrc1 = ALU_SRC1_REG;
     };
 }; 
 
+//Phase 7: ALU Special
 element i_hw_alu_special
 {
     use opc_itype_special as opc;
@@ -208,6 +213,7 @@ element i_hw_alu_special
     {
         // Register file write enable
         s_id_regwrite = WE_TRUE;
+        s_id_rfwt_sel = RFWT_ALU;
 
         switch (opc)
         {
@@ -234,8 +240,58 @@ element i_hw_alu_special
         //Phase 7:
         s_id_immsel = IMM_iTYPE;
         s_id_brnchop = BRANCH_FALSE;
-        s_id_rfwt_sel = RFWT_PC;
         s_id_brnch_sel = BRADD_ADDR;
         s_id_alusrc1 = ALU_SRC1_REG;
+    };
+};
+
+//Phase 7 Branches
+element i_hw_btype_branches
+{
+    use opc_btype_branches as opc;
+
+    assembly { opc };
+    binary { opc };
+
+    semantics
+    {
+        // Branches do not write to reg file
+        s_id_regwrite = WE_FALSE;
+        s_id_rfwt_sel = DONT_CARE; //write enable is false
+
+        switch (opc)
+        {
+            case BTYPE_BEQ:
+                s_id_aluop = ALU_SLL;
+                s_id_brnchop = BRANCH_COND_TRUE;
+                break;
+            case BTYPE_BNE:
+                s_id_brnchop = BRANCH_COND_TRUE;
+                break;
+            case BTYPE_BLT:
+                s_id_brnchop = BRANCH_COND_TRUE;
+                break;
+            case BTYPE_BGE:
+                s_id_brnchop = BRANCH_COND_TRUE;
+                break;
+            case BTYPE_BLTU:
+                s_id_brnchop = BRANCH_COND_TRUE;
+                break;
+            case BTYPE_BGEU:
+                s_id_brnchop = BRANCH_COND_TRUE;
+                break;
+            default:
+                s_id_brnchop = BRANCH_COND_FALSE;
+                break;
+        }
+
+        // Registers for inputs alusrc1 and 2
+        s_id_alusrc2 = ALU2_REG;
+
+        // HALT Command
+        s_id_halt = HALT_NOHALT; //not a halt instruction
+        s_id_immsel = IMM_bTYPE; //need b type immediate
+        s_id_brnch_sel = BRADD_ALU; 
+        s_id_alusrc1 = ALU_SRC1_REG; //same as src2
     };
 };
