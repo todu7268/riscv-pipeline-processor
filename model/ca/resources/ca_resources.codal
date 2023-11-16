@@ -83,10 +83,13 @@ signal bit [SRC1_W] s_id_alusrc1;
 //WHAT OTHER SIGNALS FOR SRC1?
 
 signal bit [IMMSEL_W] s_id_immsel;
+//s_id_immedI == s_id_immed which is already defined, so 4 new immediates?
 signal bit [IMM12_W] s_id_immedB; //12 bits for branch
 signal bit [IMM20_W] s_id_immedU; //20 bits for upper immediate
 signal bit [IMM12_W] s_id_immedS; //12 bits for store? not used here
 signal bit [IMM20_W] s_id_immedJ; //20 bits for jump? found these on google, need to check
+signal bit [RFWT_W] s_id_rfwt_sel;
+
 // -------------------------------------------------------------------------------------------------
 // Execute stage
 // -------------------------------------------------------------------------------------------------
@@ -119,6 +122,9 @@ register bit [WORD_W] r_ex_src1 { pipeline = pipe.EX; }; //output of mux1 goes i
 register bit [WORD_W] r_ex_src2 { pipeline = pipe.EX; }; //output of mux2 goes in this register
 
 //Phase 7 Signals and Registers
+signal bit [BOOLEAN_BIT] s_ex_zero;
+signal bit [WORD_W] s_ex_target_address; //width WORD_W since ALU is word_w
+register bit [RFWT_W] r_ex_rfwt_sel { pipeline = pipe.EX };
 
 // -------------------------------------------------------------------------------------------------
 // Memory stage
@@ -133,6 +139,11 @@ register bit [REGWRITE_W] r_me_regwrite { pipeline = pipe.ME; };
 register bit [RF_XPR_W] r_me_rd { pipeline = pipe.ME; };
 register bit [WORD_W] r_me_alu { pipeline = pipe.ME; };
 
+//Phase 7 Registers/Signals
+register bit [BOOLEAN_BIT] s_ex_zero { pipeline = pipe.ME; };
+register bit [WORD_W] r_me_target_addr { pipeline = pipe.ME };
+register bit [RFWT_W] r_me_rfwt_sel { pipeline = pipe.ME };
+
 // -------------------------------------------------------------------------------------------------
 // Writeback stage
 // -------------------------------------------------------------------------------------------------
@@ -146,6 +157,9 @@ register bit [RF_XPR_W] r_wb_rd { pipeline = pipe.WB; };
 register bit [WORD_W] r_wb_alu { pipeline = pipe.WB; };
 register bit [REGWRITE_W] r_wb_regwrite { pipeline = pipe.WB; };
 
+//Phase 7 Registers and Signals
+register bit [RFWT_W] r_me_rfwt_sel { pipeline = pipe.WB };
+signal bit [WORD_W] s_wb_result;
 // -------------------------------------------------------------------------------------------------
 // Pipeline control
 // -------------------------------------------------------------------------------------------------
