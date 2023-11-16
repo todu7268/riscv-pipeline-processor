@@ -262,25 +262,31 @@ element i_hw_btype_branches
         switch (opc)
         {
             case BTYPE_BEQ:
-                s_id_aluop = ALU_SLL;
+                s_id_aluop = ALU_SUB;
                 s_id_brnchop = BRANCH_COND_TRUE;
                 break;
             case BTYPE_BNE:
-                s_id_brnchop = BRANCH_COND_TRUE;
+                s_id_aluop = ALU_SUB;
+                s_id_brnchop = BRANCH_COND_FALSE;
                 break;
             case BTYPE_BLT:
+                s_id_aluop = ALU_SLT;
                 s_id_brnchop = BRANCH_COND_TRUE;
                 break;
             case BTYPE_BGE:
-                s_id_brnchop = BRANCH_COND_TRUE;
+                s_id_aluop = ALU_SLT;
+                s_id_brnchop = BRANCH_COND_FALSE;
                 break;
             case BTYPE_BLTU:
+                s_id_aluop = ALU_SLTU;
                 s_id_brnchop = BRANCH_COND_TRUE;
                 break;
             case BTYPE_BGEU:
-                s_id_brnchop = BRANCH_COND_TRUE;
+                s_id_aluop = ALU_SLTU;
+                s_id_brnchop = BRANCH_COND_FALSE;
                 break;
             default:
+                s_id_aluop = ALU_NOP;
                 s_id_brnchop = BRANCH_COND_FALSE;
                 break;
         }
