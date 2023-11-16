@@ -339,8 +339,46 @@ element i_hw_utype_ops
         s_id_halt = HALT_NOHALT;
 
         //Phase 7:
-        s_id_immsel = IMM_iTYPE;
+        s_id_immsel = IMM_uTYPE;
         s_id_brnchop = BRANCH_FALSE;
         s_id_brnch_sel = BRADD_ADDR;
+    };
+};
+
+//Phase 7 Jlreg
+element i_hw_itype_jlreg
+{
+    use opc_itype_jlreg as opc;
+
+    assembly { opc };
+    binary { opc };
+
+    semantics
+    {
+        // Register file write enable
+        s_id_regwrite = WE_TRUE;
+        s_id_rfwt_sel = RFWT_ALU;
+
+        switch (opc)
+        {
+            case ITYPE_JALR:
+                s_id_aluop = ALU_ADD;
+                break;
+            default:
+                codasip_fatal(ALU_ERROR, "Default case: %d\n", opc);
+                break;
+        }
+
+        // Operand MUXes
+        s_id_alusrc2 = ALU2_IMM;
+
+        // HALT Command
+        s_id_halt = HALT_NOHALT;
+
+        //Phase 7:
+        s_id_immsel = IMM_iTYPE; //i-type immediate
+        s_id_brnchop = BRANCH_TRUE; //always branch here
+        s_id_brnch_sel = BRADD_ALU; //ALU?
+        s_id_alusrc1 = ALU_SRC1_PC; //PC?
     };
 };
