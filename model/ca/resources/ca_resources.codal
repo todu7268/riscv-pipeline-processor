@@ -80,6 +80,8 @@ signal bit [WORD_W] s_id_mux2; //Output of mux2 in ID
 
 //Phase 7 Signals
 signal bit [SRC1_W] s_id_alusrc1;
+//WHAT OTHER SIGNALS FOR SRC1?
+
 signal bit [IMMSEL_W] s_id_immsel;
 signal bit [IMM12_W] s_id_immedB; //12 bits for branch
 signal bit [IMM20_W] s_id_immedU; //20 bits for upper immediate
@@ -115,6 +117,8 @@ signal bit [WORD_W] s_ex_src1; //output of mux1 in EX
 signal bit [WORD_W] s_ex_mux2; //output of mux2 in EX
 register bit [WORD_W] r_ex_src1 { pipeline = pipe.EX; }; //output of mux1 goes in this register
 register bit [WORD_W] r_ex_src2 { pipeline = pipe.EX; }; //output of mux2 goes in this register
+
+//Phase 7 Signals and Registers
 
 // -------------------------------------------------------------------------------------------------
 // Memory stage
