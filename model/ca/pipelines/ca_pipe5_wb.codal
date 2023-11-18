@@ -28,6 +28,8 @@
 // Write-Back Stage
 // -------------------------------------------------------------------------------------------------
 #include "debug.hcodal"
+#include "ca_defines.hcodal"
+
 event wb : pipeline(pipe.WB)
 {
     semantics
