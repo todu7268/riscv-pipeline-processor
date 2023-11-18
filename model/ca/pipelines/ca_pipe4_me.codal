@@ -36,7 +36,20 @@ event me : pipeline(pipe.ME)
 
     semantics
     {
-
+        switch(r_me_brnchop){
+            case BRANCH_COND_TRUE:
+                s_me_pcsrc = 1; //take the branch
+                break;
+            case BRANCH_COND_FALSE:
+                s_me_pcsrc = 0; //dont take the branch
+                break;
+            case BRANCH_TRUE:
+                s_me_pcsrc = 1; //take the branch
+                break;
+            case BRANCH_FALSE:
+                s_me_pcsrc = 0; //dont take the branch
+                break;
+        }
         me_output();
     };
 };
@@ -51,5 +64,7 @@ event me_output : pipeline(pipe.ME)
         r_wb_regwrite = r_me_regwrite;
         r_wb_rd = r_me_rd;
         r_wb_alu = r_me_alu;
+
+        r_wb_rfwt_sel = r_me_rfwt_sel;
     };
 };
