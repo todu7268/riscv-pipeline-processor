@@ -33,6 +33,7 @@
 enum info_levels
 {
     IMM_NONE        = 0,
+    RFWT_ERROR      = 1,
     INFO_GENERAL    = 2,
     INFO_RF_WRITE   = 3,
     INFO_PC_WRITE   = 4,

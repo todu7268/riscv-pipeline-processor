@@ -167,6 +167,7 @@ register bit [REGWRITE_W] r_wb_regwrite { pipeline = pipe.WB; };
 //Phase 7 Registers and Signals
 register bit [RFWT_W] r_wb_rfwt_sel { pipeline = pipe.WB };
 signal bit [WORD_W] s_wb_result;
+signal bit [ADDR_W] s_wb_adder;
 
 // -------------------------------------------------------------------------------------------------
 // Pipeline control
