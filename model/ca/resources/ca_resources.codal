@@ -89,6 +89,7 @@ signal bit [IMM20_W] s_id_immedU; //20 bits for upper immediate
 signal bit [IMM12_W] s_id_immedS; //12 bits for store? not used here
 signal bit [IMM20_W] s_id_immedJ; //20 bits for jump? found these on google, need to check
 signal bit [RFWT_W] s_id_rfwt_sel;
+signal bit [BRANCH_W] s_id_brnchop;
 
 // -------------------------------------------------------------------------------------------------
 // Execute stage
@@ -125,7 +126,8 @@ register bit [WORD_W] r_ex_src2 { pipeline = pipe.EX; }; //output of mux2 goes i
 signal bit [BOOLEAN_BIT] s_ex_zero;
 signal bit [WORD_W] s_ex_target_address; //width WORD_W since ALU is word_w
 register bit [RFWT_W] r_ex_rfwt_sel { pipeline = pipe.EX };
-
+signal bit [WORD_W] s_ex_mux1; //input into the src1 mux
+register bit [BRANCH_W] r_ex_brnchop { pipeline = pipe.EX };
 // -------------------------------------------------------------------------------------------------
 // Memory stage
 // -------------------------------------------------------------------------------------------------
@@ -140,9 +142,10 @@ register bit [RF_XPR_W] r_me_rd { pipeline = pipe.ME; };
 register bit [WORD_W] r_me_alu { pipeline = pipe.ME; };
 
 //Phase 7 Registers/Signals
-register bit [BOOLEAN_BIT] s_ex_zero { pipeline = pipe.ME; };
+register bit [BOOLEAN_BIT] r_me_zero { pipeline = pipe.ME; };
 register bit [WORD_W] r_me_target_addr { pipeline = pipe.ME };
 register bit [RFWT_W] r_me_rfwt_sel { pipeline = pipe.ME };
+register bit [BRANCH_W] r_me_brnchop { pipeline = pipe.ME };
 
 // -------------------------------------------------------------------------------------------------
 // Writeback stage
