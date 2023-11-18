@@ -163,5 +163,11 @@ event id_output : pipeline(pipe.ID)
         //Adding src1 and src2 outputs
         r_ex_src1 = s_id_mux1;
         r_ex_src2 = s_id_mux2;
+
+        //Phase 7 registers
+        r_ex_brnchop = s_id_brnchop;
+        r_ex_rfwt_sel = s_id_rfwt_sel;
+        r_ex_brnch_sel = s_id_brnch_sel;
+        r_ex_alusrc1 = s_id_alusrc1;
     };
 };
