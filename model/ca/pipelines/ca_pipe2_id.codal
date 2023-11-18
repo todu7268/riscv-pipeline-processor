@@ -129,6 +129,9 @@ event id : pipeline(pipe.ID)
                 //J-type
                 s_id_immed = s_id_immedJ;
                 break;
+            default:
+                codasip_fatal(IMM_NONE, "Error: IMM_NONE\n");
+                break;
         }
 
         // Update the registers
