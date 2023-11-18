@@ -32,7 +32,6 @@
 //          -> Debugger parameters: "--logging 0+"
 enum info_levels
 {
-    IMM_NONE        = 0,
     RFWT_ERROR      = 1,
     INFO_GENERAL    = 2,
     INFO_RF_WRITE   = 3,
