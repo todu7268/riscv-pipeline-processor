@@ -93,7 +93,7 @@ signal bit [WORD_W] s_id_immedJ;
 
 signal bit [RFWT_W] s_id_rfwt_sel;
 signal bit [BRANCH_W] s_id_brnchop;
-
+signal bit [BRNCH_SEL] s_id_brnch_sel;
 // -------------------------------------------------------------------------------------------------
 // Execute stage
 // -------------------------------------------------------------------------------------------------
@@ -132,6 +132,8 @@ register bit [RFWT_W] r_ex_rfwt_sel { pipeline = pipe.EX; };
 signal bit [WORD_W] s_ex_mux1; //input into the src1 mux
 register bit [BRANCH_W] r_ex_brnchop { pipeline = pipe.EX; };
 signal bit [WORD_W] s_ex_brimm;
+register bit [BRNCH_SEL] r_ex_brnch_sel { pipeline = pipe.EX; };
+register bit [SRC1_W] r_ex_alusrc1 { pipeline = pipe.EX; };
 // -------------------------------------------------------------------------------------------------
 // Memory stage
 // -------------------------------------------------------------------------------------------------
@@ -150,7 +152,7 @@ register bit [BOOLEAN_BIT] r_me_zero { pipeline = pipe.ME; };
 register bit [WORD_W] r_me_target_addr { pipeline = pipe.ME; };
 register bit [RFWT_W] r_me_rfwt_sel { pipeline = pipe.ME; };
 register bit [BRANCH_W] r_me_brnchop { pipeline = pipe.ME; };
-
+signal bit [BOOLEAN_BIT] s_me_pcsrc;
 // -------------------------------------------------------------------------------------------------
 // Writeback stage
 // -------------------------------------------------------------------------------------------------
