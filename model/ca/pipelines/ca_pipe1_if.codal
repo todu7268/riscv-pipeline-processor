@@ -43,11 +43,18 @@ event fe : pipeline(pipe.IF)
         if_code.transport(CP_PHS_ADDRESS, CP_AHB_NONSEQ, CP_AHB_READ, r_pc, CP_AHB_SIZE_32);
         s_if_nextpc = r_pc + INSTR_SIZE;
         
+        if(s_me_pcsrc == 0){
+            s_if_pcin = s_if_nextpc;
+        }
+        else{
+            s_if_pcin = r_me_target_addr;
+        }
         // Set all the clear signals.
-        s_id_clear = 0;
-        s_ex_clear = 0;
+        //Phase 7 - change to s_me_pcsrc
+        s_id_clear = s_me_pcsrc;
+        s_ex_clear = s_me_pcsrc;
+        s_me_clear = s_me_pcsrc;
         s_wb_clear = 0;
-        s_me_clear = 0;
 
         // Set the local stall signal.
         s_if_stall = 0;
@@ -62,7 +69,7 @@ event if_output : pipeline(pipe.IF)
     semantics
     {
         r_id_pc = r_pc;
-        r_pc = s_if_nextpc;
+        r_pc = s_if_pcin;
         r_id_clear = s_id_clear;
     };
 };
