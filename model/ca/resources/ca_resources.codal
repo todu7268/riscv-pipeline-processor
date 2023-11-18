@@ -68,7 +68,7 @@ signal bit[OPC_W] s_id_opc;
 //Signals from Phase 4
 signal bit [RF_XPR_W] s_id_rs1;
 signal bit [RF_XPR_W] s_id_rs2;
-signal bit [WORD_W] s_id_immed;
+signal bit [WORD_W] s_id_immed; //This now holds the selection
 signal bit [RF_XPR_W] s_id_rd;
 signal bit [WORD_W] s_id_reg1;
 signal bit [WORD_W] s_id_reg2;
@@ -84,11 +84,13 @@ signal bit [SRC1_W] s_id_alusrc1;
 //WHAT OTHER SIGNALS FOR SRC1?
 
 signal bit [IMMSEL_W] s_id_immsel;
-//s_id_immedI == s_id_immed which is already defined, so 4 new immediates?
-signal bit [WORD_W] s_id_immedB; //12 bits for branch
-signal bit [WORD_W] s_id_immedU; //20 bits for upper immediate
-signal bit [WORD_W] s_id_immedS; //12 bits for store? not used here
-signal bit [WORD_W] s_id_immedJ; //20 bits for jump? found these on google, need to check
+//Immediates
+signal bit [WORD_W] s_id_immedI; 
+signal bit [WORD_W] s_id_immedB; 
+signal bit [WORD_W] s_id_immedU; 
+signal bit [WORD_W] s_id_immedS; 
+signal bit [WORD_W] s_id_immedJ;
+
 signal bit [RFWT_W] s_id_rfwt_sel;
 signal bit [BRANCH_W] s_id_brnchop;
 

@@ -54,14 +54,14 @@ event id : pipeline(pipe.ID)
         //Destination register
         s_id_rd = s_id_instr[11..7];
         //immediate
-        s_id_immed = (int32)(int12)s_id_instr[31..20];
+        s_id_immedI = (int32)(int12)s_id_instr[31..20];
 
         //Other immediates for Phase 7
         s_id_immedB = ((int32)(int12)(s_id_instr [31..31]:: s_id_instr [7..7]:: s_id_instr [30..25]::s_id_instr [11..8])) << 1;
         s_id_immedU = ((int32)(int20)(s_id_instr[31..12])) << 12;
         s_id_immedS = ((int32)(int12)(s_id_instr[31..25]::s_id_instr[11..7]));
         s_id_immedJ = ((int32)(int20)(s_id_instr[31..31]::s_id_instr[19..12]::s_id_instr[20..20]::s_id_instr[30..21])) << 1;
-        
+
         //Reading the input registers
         s_id_reg1 = rf_xpr.src1[s_id_rs1];
         s_id_reg2 = rf_xpr.src2[s_id_rs2];
@@ -102,6 +102,34 @@ event id : pipeline(pipe.ID)
 
         // Decoder activation
         dec(s_id_opc);
+
+        //IMGEN 6-1 multiplexor
+        switch(s_id_immsel){
+            case IMM_NONE:
+                //Don't need an immediate here
+                s_id_immed = 0;
+                break;
+            case IMM_iTYPE:
+                //I-type
+                s_id_immed = s_id_immedI;
+                break;
+            case IMM_bTYPE:
+                //B-type
+                s_id_immed = s_id_immedB;
+                break;
+            case IMM_uTYPE:
+                //U-type
+                s_id_immed = s_id_immedU;
+                break;
+            case IMM_sTYPE:
+                //S-type
+                s_id_immed = s_id_immedS;
+                break;
+            case IMM_jTYPE:
+                //J-type
+                s_id_immed = s_id_immedJ;
+                break;
+        }
 
         // Update the registers
         id_output();
