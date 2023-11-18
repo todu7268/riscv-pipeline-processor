@@ -85,10 +85,10 @@ signal bit [SRC1_W] s_id_alusrc1;
 
 signal bit [IMMSEL_W] s_id_immsel;
 //s_id_immedI == s_id_immed which is already defined, so 4 new immediates?
-signal bit [IMM12_W] s_id_immedB; //12 bits for branch
-signal bit [IMM20_W] s_id_immedU; //20 bits for upper immediate
-signal bit [IMM12_W] s_id_immedS; //12 bits for store? not used here
-signal bit [IMM20_W] s_id_immedJ; //20 bits for jump? found these on google, need to check
+signal bit [WORD_W] s_id_immedB; //12 bits for branch
+signal bit [WORD_W] s_id_immedU; //20 bits for upper immediate
+signal bit [WORD_W] s_id_immedS; //12 bits for store? not used here
+signal bit [WORD_W] s_id_immedJ; //20 bits for jump? found these on google, need to check
 signal bit [RFWT_W] s_id_rfwt_sel;
 signal bit [BRANCH_W] s_id_brnchop;
 
