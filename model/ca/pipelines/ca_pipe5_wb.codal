@@ -32,16 +32,6 @@ event wb : pipeline(pipe.WB)
 {
     semantics
     {
-        //Code to write to register file
-        //Need to make 1 minor modification
-        if (r_wb_regwrite){
-            if (r_wb_rd == 0); //Do nothing if r_wb_rd == 0
-            else{
-                rf_xpr.wrt0[r_wb_rd] = r_wb_alu;
-                codasip_info(INFO_RF_WRITE, "rf_xpr[%d] = 0x%x", r_wb_rd, r_wb_alu);
-            }
-        }
-
         s_wb_adder = r_wb_pc + 4;
 
         switch (r_wb_rfwt_sel){
@@ -58,6 +48,15 @@ event wb : pipeline(pipe.WB)
                 codasip_fatal(RFWT_ERROR, "RFWT ERROR \n");
                 break;
         }
+
+        if (r_wb_regwrite){
+            if (r_wb_rd == 0); //Do nothing if r_wb_rd == 0
+            else{
+                rf_xpr.wrt0[r_wb_rd] = s_wb_result;
+                codasip_info(INFO_RF_WRITE, "rf_xpr[%d] = 0x%x", r_wb_rd, r_wb_alu);
+            }
+        }
+
         // Set local stall.
         s_wb_stall = 0;
 
