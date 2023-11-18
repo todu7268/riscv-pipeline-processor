@@ -32,12 +32,18 @@ event pipeline_control : pipeline(pipe.IF)
     semantics
     {
         print_pipeline();
-        if(s_if_stall){
+
+        if (s_me_pcsrc){
+            pipe.ID.clear();
+            pipe.EX.clear();
+        }
+
+        else if(s_if_stall){
             pipe.IF.stall();
             codasip_info(INFO_PIPE, "pipeline IF stall \n");
         }
 
-        if(s_id_stall){
+        else if(s_id_stall){
             pipe.ID.stall();
             codasip_info(INFO_PIPE, "pipeline ID stall \n");
         }
@@ -47,7 +53,7 @@ event pipeline_control : pipeline(pipe.IF)
             codasip_info(INFO_PIPE, "pipeline ID clear \n");
         }
 
-        if(s_ex_stall){
+        else if(s_ex_stall){
             pipe.EX.stall();
             codasip_info(INFO_PIPE, "pipeline EX stall \n");
         }
@@ -57,7 +63,7 @@ event pipeline_control : pipeline(pipe.IF)
             codasip_info(INFO_PIPE, "pipeline EX clear \n");
         }
 
-        if(s_me_stall){
+        else if(s_me_stall){
             pipe.ME.stall();
             codasip_info(INFO_PIPE, "pipeline ME stall \n");
         }
@@ -67,7 +73,7 @@ event pipeline_control : pipeline(pipe.IF)
             codasip_info(INFO_PIPE, "pipeline ME clear \n");
         }
 
-        if(s_wb_stall){
+        else if(s_wb_stall){
             pipe.WB.stall();
             codasip_info(INFO_PIPE, "pipeline WB stall \n");
         }
