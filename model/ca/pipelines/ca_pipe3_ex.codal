@@ -129,10 +129,10 @@ event ex : pipeline(pipe.EX)
                 s_ex_alu = s_ex_src1 ^ s_ex_src2;
                 break;
             case ALU_SRL:
-                s_ex_alu = s_ex_src1 >> (int5) s_ex_src2;
+                s_ex_alu = s_ex_src1 >> (uint5) s_ex_src2;
                 break;
             case ALU_SRA:
-                s_ex_alu = (int32) s_ex_src1 >> (int5) s_ex_src2;
+                s_ex_alu = (int32) s_ex_src1 >> (uint5) s_ex_src2;
                 break;
             case ALU_OR:
                 s_ex_alu = s_ex_src1 | s_ex_src2;
