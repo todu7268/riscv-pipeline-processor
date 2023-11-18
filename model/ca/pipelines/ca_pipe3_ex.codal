@@ -68,7 +68,7 @@ event ex : pipeline(pipe.EX)
                 s_ex_mux1 = r_me_alu; //from ME
                 break;
             default:
-                s_ex_src1 = 0;
+                s_ex_mux1 = 0;
                 break;
         }
         //fwdB multiplexor
