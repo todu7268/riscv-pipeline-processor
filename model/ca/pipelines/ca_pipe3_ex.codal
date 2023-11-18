@@ -59,13 +59,13 @@ event ex : pipeline(pipe.EX)
         //fwdA multiplexor
         switch(s_ex_fwdA_sl){
             case FWDA_REG:
-                s_ex_src1 = r_ex_src1; //from the previous stage
+                s_ex_mux1 = r_ex_src1; //from the previous stage
                 break;
             case FWDA_WB:
-                s_ex_src1 = r_wb_alu; //from WB
+                s_ex_mux1 = s_wb_result; //from WB
                 break;
             case FWDA_MEM:
-                s_ex_src1 = r_me_alu; //from ME
+                s_ex_mux1 = r_me_alu; //from ME
                 break;
             default:
                 s_ex_src1 = 0;
@@ -77,13 +77,30 @@ event ex : pipeline(pipe.EX)
                 s_ex_mux2 = r_ex_src2; //from previous stage
                 break;
             case FWDB_WB:
-                s_ex_mux2 = r_wb_alu; //from WB
+                s_ex_mux2 = s_wb_result; //from WB
                 break;
             case FWDB_MEM:
                 s_ex_mux2 = r_me_alu; //from ME
                 break;
             default:
                 s_ex_mux2 = 0;
+                break;
+        }
+
+        //Phase 7 src1 multiplexor
+        switch(r_ex_alusrc1){
+            case ALU_SRC1_ZERO:
+                s_ex_src1 = 0;
+                break;
+            case ALU_SRC1_REG:
+                s_ex_src1 = s_ex_mux1;
+                break;
+            case ALU_SRC1_PC:
+                s_ex_src1 = r_ex_pc;
+                break;
+            default:
+                //I'm gonna leave this as SRC2_ERROR
+                codasip_fatal(SRC2_ERROR, "Default case: %d \n", r_ex_alusrc1);
                 break;
         }
 
@@ -102,12 +119,9 @@ event ex : pipeline(pipe.EX)
         }
 
         switch (r_ex_aluop){
-            //Nop
             case ALU_NOP:
                 s_ex_alu = 0;
                 break;
-    
-            //Add
             case ALU_ADD:
                 s_ex_alu = s_ex_src1 + s_ex_src2;
                 break;
@@ -146,6 +160,23 @@ event ex : pipeline(pipe.EX)
             
         }
 
+        s_ex_brimm = r_ex_pc + r_ex_immed; //adder logic, not in the instructions
+
+        switch(r_ex_brnch_sel){
+            case BRADD_ALU:
+                s_ex_target_address = s_ex_alu;
+                break;
+            case BRADD_ADDR:
+                s_ex_target_address = s_ex_brimm;
+                break;
+        }
+        
+        //s_ex_zero logic
+        if (s_ex_alu == 0)
+            s_ex_zero = 1;
+        else if (s_ex_alu != 0)
+            s_ex_zero = 0;
+
         // Timing
         ex_output();
     };
@@ -162,5 +193,10 @@ event ex_output : pipeline(pipe.EX)
         r_me_regwrite = r_ex_regwrite;
         r_me_rd = r_ex_rd;
         r_me_alu = s_ex_alu;
+
+        r_me_rfwt_sel = r_ex_rfwt_sel;
+        r_me_brnchop = r_ex_brnchop;
+        r_me_target_addr = s_ex_target_address;
+        r_me_zero = s_ex_zero;
     };
 };
