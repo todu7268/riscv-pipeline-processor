@@ -36,6 +36,7 @@ event pipeline_control : pipeline(pipe.IF)
         if (s_me_pcsrc){
             pipe.ID.clear();
             pipe.EX.clear();
+            pipe.ME.clear();
         }
 
         else if(s_if_stall){

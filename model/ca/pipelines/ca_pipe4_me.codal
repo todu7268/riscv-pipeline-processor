@@ -38,10 +38,16 @@ event me : pipeline(pipe.ME)
     {
         switch(r_me_brnchop){
             case BRANCH_COND_TRUE:
-                s_me_pcsrc = 1; //take the branch
+                if (r_me_zero == 1)
+                    s_me_pcsrc = 1; //take the branch
+                else
+                    s_me_pcsrc = 0;
                 break;
             case BRANCH_COND_FALSE:
-                s_me_pcsrc = 0; //dont take the branch
+                if (r_me_zero == 0)
+                    s_me_pcsrc = 1; //dont take the branch
+                else
+                    s_me_pcsrc = 0;
                 break;
             case BRANCH_TRUE:
                 s_me_pcsrc = 1; //take the branch
