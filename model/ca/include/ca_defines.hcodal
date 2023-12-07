@@ -53,6 +53,7 @@
 #define RFWT_W bitsizeof(enum rfwt_sel)
 #define BRNCH_SEL bitsizeof(enum branch_sel)
 #define IMMSEL_W bitsizeof(enum immed) //Not in the instructions, but added for immsel width in ca_decoder.codal
+#define MEM_OPS_W bitsizeof(enum mem_ops) //Not in the instructions, but I might need it so I put it here
 
 // -------------------------------------------------------------------------------------------------
 // Enumerations
@@ -175,6 +176,20 @@ enum branch_sel
 {
     BRADD_ALU,
     BRADD_ADDR
+};
+
+//Phase 8
+enum mem_ops
+{
+    MEM_NOP,
+    MEM_SW,
+    MEM_SH,
+    MEM_SB,
+    MEM_LW,
+    MEM_LH,
+    MEM_LHU,
+    MEM_LB,
+    MEM_LBU
 };
 
 // -------------------------------------------------------------------------------------------------
