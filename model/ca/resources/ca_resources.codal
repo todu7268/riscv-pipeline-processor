@@ -94,6 +94,16 @@ signal bit [WORD_W] s_id_immedJ;
 signal bit [RFWT_W] s_id_rfwt_sel;
 signal bit [BRANCH_W] s_id_brnchop;
 signal bit [BRNCH_SEL] s_id_brnch_sel;
+
+//Phase 8 signals
+signal bit [MEM_OPS_W] s_id_memop;
+signal bit [BOOLEAN_BIT] s_id_loadhaz;
+
+//Phase 8 registers
+register bit [BOOLEAN_BIT] r_id_stall {default = false;};
+register bit [INSTR_W] r_id_instr_preserved;
+register bit [ADDR_W] r_id_pc_preserved;
+
 // -------------------------------------------------------------------------------------------------
 // Execute stage
 // -------------------------------------------------------------------------------------------------
@@ -134,6 +144,11 @@ register bit [BRANCH_W] r_ex_brnchop { pipeline = pipe.EX; };
 signal bit [WORD_W] s_ex_brimm;
 register bit [BRNCH_SEL] r_ex_brnch_sel { pipeline = pipe.EX; };
 register bit [SRC1_W] r_ex_alusrc1 { pipeline = pipe.EX; };
+
+//Phase 8 signals
+signal bit [] s_ex_memsize;
+signal bit [WORD_W] s_ex_encoded_data;
+
 // -------------------------------------------------------------------------------------------------
 // Memory stage
 // -------------------------------------------------------------------------------------------------
@@ -153,6 +168,11 @@ register bit [WORD_W] r_me_target_addr { pipeline = pipe.ME; };
 register bit [RFWT_W] r_me_rfwt_sel { pipeline = pipe.ME; };
 register bit [BRANCH_W] r_me_brnchop { pipeline = pipe.ME; };
 signal bit [BOOLEAN_BIT] s_me_pcsrc;
+
+//Phase 8 signals
+signal bit [WORD_W] s_me_decoded_data;
+signal bit [WORD_W] s_me_mem_result;
+
 // -------------------------------------------------------------------------------------------------
 // Writeback stage
 // -------------------------------------------------------------------------------------------------
