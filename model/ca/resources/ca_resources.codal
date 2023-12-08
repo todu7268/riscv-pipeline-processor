@@ -145,9 +145,10 @@ signal bit [WORD_W] s_ex_brimm;
 register bit [BRNCH_SEL] r_ex_brnch_sel { pipeline = pipe.EX; };
 register bit [SRC1_W] r_ex_alusrc1 { pipeline = pipe.EX; };
 
-//Phase 8 signals
-signal bit [] s_ex_memsize;
-signal bit [WORD_W] s_ex_encoded_data;
+//Phase 8 signals and registers
+signal bit [TWO_BIT] s_ex_memsize; //uint2 is 2 bits
+signal bit [WORD_W] s_ex_encoded_data; //s_ex_wtdat in schematics
+register bit [MEM_OPS_W] r_ex_memop { pipeline = pipe.EX; };
 
 // -------------------------------------------------------------------------------------------------
 // Memory stage
@@ -169,9 +170,11 @@ register bit [RFWT_W] r_me_rfwt_sel { pipeline = pipe.ME; };
 register bit [BRANCH_W] r_me_brnchop { pipeline = pipe.ME; };
 signal bit [BOOLEAN_BIT] s_me_pcsrc;
 
-//Phase 8 signals
-signal bit [WORD_W] s_me_decoded_data;
-signal bit [WORD_W] s_me_mem_result;
+//Phase 8 signals and registers
+signal bit [WORD_W] s_me_decoded_data; //s_me_memdat in schematics?
+signal bit [WORD_W] s_me_mem_result; // s_me_rdat in schematics?
+register bit [MEM_OPS_W] r_me_memop { pipeline = pipe.ME; };
+register bit [MEM_OPS_W] r_me_encoded_data { pipeline = pipe.ME; }; // r_me_wtdat in schematics
 
 // -------------------------------------------------------------------------------------------------
 // Writeback stage
@@ -190,6 +193,9 @@ register bit [REGWRITE_W] r_wb_regwrite { pipeline = pipe.WB; };
 register bit [RFWT_W] r_wb_rfwt_sel { pipeline = pipe.WB; };
 signal bit [WORD_W] s_wb_result;
 signal bit [ADDR_W] s_wb_adder;
+
+//Phase 8 registers
+register bit [WORD_W] r_wb_decoded_data { pipeline = pipe.WB; }; //r_wb_memdat in schematics?
 
 // -------------------------------------------------------------------------------------------------
 // Pipeline control
