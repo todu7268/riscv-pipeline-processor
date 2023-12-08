@@ -532,10 +532,10 @@ element i_hw_store
                 s_id_memop = MEM_SB;
                 break;
             case STYPE_SH:
-                s_id_memop = MEM_SB;
+                s_id_memop = MEM_SH;
                 break;
             case STYPE_SW:
-                s_id_memop = MEM_SB;
+                s_id_memop = MEM_SW;
                 break;
             default:
                 codasip_fatal(ALU_ERROR, "Default case: %d\n", opc);
