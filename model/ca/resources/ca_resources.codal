@@ -171,8 +171,8 @@ register bit [BRANCH_W] r_me_brnchop { pipeline = pipe.ME; };
 signal bit [BOOLEAN_BIT] s_me_pcsrc;
 
 //Phase 8 signals and registers
-signal bit [WORD_W] s_me_decoded_data; //s_me_memdat in schematics?
-signal bit [WORD_W] s_me_mem_result; // s_me_rdat in schematics?
+signal bit [WORD_W] s_me_decoded_data; //s_me_rdat in schematics
+signal bit [WORD_W] s_me_mem_result; // s_me_memdat in schematics
 register bit [MEM_OPS_W] r_me_memop { pipeline = pipe.ME; };
 register bit [MEM_OPS_W] r_me_encoded_data { pipeline = pipe.ME; }; // r_me_wtdat in schematics
 
@@ -195,7 +195,7 @@ signal bit [WORD_W] s_wb_result;
 signal bit [ADDR_W] s_wb_adder;
 
 //Phase 8 registers
-register bit [WORD_W] r_wb_decoded_data { pipeline = pipe.WB; }; //r_wb_memdat in schematics?
+register bit [WORD_W] r_wb_mem_result { pipeline = pipe.WB; }; //r_wb_memdat in schematics
 
 // -------------------------------------------------------------------------------------------------
 // Pipeline control
