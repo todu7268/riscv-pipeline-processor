@@ -156,7 +156,7 @@ element i_hw_alu
         s_id_brnch_sel = BRADD_ADDR;
 
         //Phase 8: Memop adding to all other elements
-        s_id_memop = MEM_NOP
+        s_id_memop = MEM_NOP;
         
     };
 };
@@ -215,7 +215,7 @@ element i_hw_alu_i
         s_id_alusrc1 = ALU_SRC1_REG;
 
         //Phase 8: Memop adding to all other elements
-        s_id_memop = MEM_NOP
+        s_id_memop = MEM_NOP;
     };
 }; 
 
@@ -262,7 +262,7 @@ element i_hw_alu_special
         s_id_alusrc1 = ALU_SRC1_REG;
 
         //Phase 8: Memop adding to all other elements
-        s_id_memop = MEM_NOP
+        s_id_memop = MEM_NOP;
     };
 };
 
@@ -328,7 +328,7 @@ element i_hw_btype_branches
         s_id_alusrc1 = ALU_SRC1_REG; //same as src2
 
         //Phase 8: Memop adding to all other elements
-        s_id_memop = MEM_NOP
+        s_id_memop = MEM_NOP;
     };
 };
 
@@ -373,7 +373,7 @@ element i_hw_utype_ops
         s_id_brnch_sel = BRADD_ADDR;
 
         //Phase 8: Memop adding to all other elements
-        s_id_memop = MEM_NOP
+        s_id_memop = MEM_NOP;
     };
 };
 
@@ -416,7 +416,7 @@ element i_hw_itype_jlreg
         s_id_alusrc1 = ALU_SRC1_REG;
 
         //Phase 8: Memop adding to all other elements
-        s_id_memop = MEM_NOP
+        s_id_memop = MEM_NOP;
     };
 };
 
@@ -459,7 +459,7 @@ element i_hw_itype_jlink
         s_id_alusrc1 = ALU_SRC1_REG; //jzm
 
         //Phase 8: Memop adding to all other elements
-        s_id_memop = MEM_NOP
+        s_id_memop = MEM_NOP;
     };
 };
 
@@ -473,8 +473,36 @@ element i_hw_loads
 
     semantics
     {
-        switch(opc){
+        //Signals from previous phases
+        s_id_regwrite = WE_TRUE; // Load writes to registers
+        s_id_rfwt_sel = RFWT_MEM; // Mux selects the memory data
+        s_id_alusrc2 = ALU2_IMM; //Immediate
+        s_id_halt = HALT_NOHALT; //No halt
+        s_id_immsel = IMM_iTYPE; //itype for loads
+        s_id_brnchop = BRANCH_FALSE; //Never Branch
+        s_id_brnch_sel = DONT_CARE; //We dont branch, so we dont care
+        s_id_alusrc1 = ALU_SRC1_REG; //First input is a register
+        s_id_aluop = ALU_ADD;
 
+        switch(opc){
+            case ITYPE_LB:
+                s_id_memop = MEM_LB;
+                break;
+            case ITYPE_LH:
+                s_id_memop = MEM_LH;
+                break;
+            case ITYPE_LW:
+                s_id_memop = MEM_LW;
+                break;
+            case ITYPE_LBU:
+                s_id_memop = MEM_LBU;
+                break;
+            case ITYPE_LHU:
+                s_id_memop = MEM_LHU;
+                break;
+            default:
+                codasip_fatal(ALU_ERROR, "Default case: %d\n", opc);
+                break;
         }
     };
 };
@@ -488,8 +516,30 @@ element i_hw_store
 
     semantics
     {
-        switch(opc){
+        //Signals from previous phases
+        s_id_regwrite = WE_FALSE; // Store writes to memory, not registers
+        s_id_rfwt_sel = DONT_CARE; // Not writing, we dont care
+        s_id_alusrc2 = ALU2_IMM; //Immediate
+        s_id_halt = HALT_NOHALT; //No halt
+        s_id_immsel = IMM_sTYPE; //s-type
+        s_id_brnchop = BRANCH_FALSE; //Never Branch
+        s_id_brnch_sel = DONT_CARE; //Dont care about this since we dont branch
+        s_id_alusrc1 = ALU_SRC1_REG; //First input is a register
+        s_id_aluop = ALU_ADD; 
 
+        switch(opc){
+            case STYPE_SB:
+                s_id_memop = MEM_SB;
+                break;
+            case STYPE_SH:
+                s_id_memop = MEM_SB;
+                break;
+            case STYPE_SW:
+                s_id_memop = MEM_SB;
+                break;
+            default:
+                codasip_fatal(ALU_ERROR, "Default case: %d\n", opc);
+                break;
         }
     };
 };
