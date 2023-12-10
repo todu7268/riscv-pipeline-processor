@@ -41,7 +41,7 @@ event id : pipeline(pipe.ID)
         bool cache_ready, cache_response;
 
         // Set local stall.
-        s_id_stall = 0;
+        s_id_stall = (s_ex_stall || s_id_loadhaz);
 
         if_code.transport(CP_PHS_DATA, cache_ready, cache_response, id_instr_temp);
         // s_id_instr = r_id_clear? NOP_INSTRUCTION: id_instr_temp; --- Code from Phase 5-7
@@ -182,5 +182,8 @@ event id_output : pipeline(pipe.ID)
         r_ex_rfwt_sel = s_id_rfwt_sel;
         r_ex_brnch_sel = s_id_brnch_sel;
         r_ex_alusrc1 = s_id_alusrc1;
+
+        //Phase 8 memop
+        r_ex_memop = s_id_memop;
     };
 };
