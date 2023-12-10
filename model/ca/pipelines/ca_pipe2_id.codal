@@ -40,6 +40,14 @@ event id : pipeline(pipe.ID)
         uint32 id_instr_temp;
         bool cache_ready, cache_response;
 
+        //Phase 8 check for load hazard
+        if (r_ex_memop == MEM_LW && ((r_ex_rd == s_id_rs1) || (r_ex_rd == s_id_rs2))) s_id_loadhaz = 1; //load hazard, lw
+        else if (r_ex_memop == MEM_LH && ((r_ex_rd == s_id_rs1) || (r_ex_rd == s_id_rs2))) s_id_loadhaz = 1; //load hazard, lh
+        else if (r_ex_memop == MEM_LHU && ((r_ex_rd == s_id_rs1) || (r_ex_rd == s_id_rs2))) s_id_loadhaz = 1; //load hazard, lhu
+        else if (r_ex_memop == MEM_LB && ((r_ex_rd == s_id_rs1) || (r_ex_rd == s_id_rs2))) s_id_loadhaz = 1; //load hazard, lb
+        else if (r_ex_memop == MEM_LBU && ((r_ex_rd == s_id_rs1) || (r_ex_rd == s_id_rs2))) s_id_loadhaz = 1; //load hazard, lbu
+        else s_id_loadhaz = 0; //no memop load or no dependency, no load hazard
+
         // Set local stall.
         s_id_stall = (s_ex_stall || s_id_loadhaz);
 
@@ -183,7 +191,9 @@ event id_output : pipeline(pipe.ID)
         r_ex_brnch_sel = s_id_brnch_sel;
         r_ex_alusrc1 = s_id_alusrc1;
 
-        //Phase 8 memop
+        //Phase 8 
         r_ex_memop = s_id_memop;
+        r_id_instr_preserved = s_id_instr;
+        r_id_pc_preserved = r_id_pc;
     };
 };
