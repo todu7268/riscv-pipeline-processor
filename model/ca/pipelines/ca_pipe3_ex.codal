@@ -275,5 +275,6 @@ event ex_output : pipeline(pipe.EX)
         s_me_stall = s_ex_stall;
         r_me_memop = r_ex_memop;
         r_me_encoded_data = s_ex_encoded_data;
+        r_me_memsize = s_ex_memsize;
     };
 };

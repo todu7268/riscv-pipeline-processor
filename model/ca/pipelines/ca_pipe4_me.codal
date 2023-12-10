@@ -70,12 +70,14 @@ event me_memory : pipeline(pipe.ME)
         uint1 data_ready;
         uint1 data_response;
         uint32 load_data_temp;
+
         if (r_me_memop == MEM_NOP){
             //if there's no memory operation, we don't need this?
             data_ready = DONT_CARE;
             data_response = DONT_CARE;
             load_data_temp = DONT_CARE;
         }
+
         else{
             ldst.transport(CP_PHS_DATA, data_ready, data_response, load_data_temp, r_me_encoded_data);
             s_me_decoded_data = ldst.decode_data(load_data_temp, r_me_alu, r_me_memsize);
@@ -103,8 +105,11 @@ event me_memory : pipeline(pipe.ME)
         }
 
         //Logic to assert s_me_stall if data_ready and data_response are 0s
-        if (data_ready == 0 && data_response == 0)
-            assert(s_me_stall);
+        if (r_me_memop == MEM_LB || r_me_memop == MEM_LBU || r_me_memop == MEM_LH || r_me_memop == MEM_LHU || r_me_memop == MEM_LW)
+            if (data_ready == 0 && data_response == 0)
+                if (s_me_stall == 0)
+                    //if s_me_stall is 0, crash.
+                    codasip_fatal(FATAL_ERROR_LEVEL, "Assertion error, data_ready and data_response are zeros, s_me_stall is not \n");
 
     };
 };

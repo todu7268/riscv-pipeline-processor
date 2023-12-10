@@ -175,6 +175,7 @@ signal bit [WORD_W] s_me_decoded_data; //s_me_rdat in schematics
 signal bit [WORD_W] s_me_mem_result; // s_me_memdat in schematics
 register bit [MEM_OPS_W] r_me_memop { pipeline = pipe.ME; };
 register bit [MEM_OPS_W] r_me_encoded_data { pipeline = pipe.ME; }; // r_me_wtdat in schematics
+register bit [TWO_BIT] r_me_memsize { pipeline = pipe.ME; }; //pipelined memsize too, we needed it for ldst.transport(), not in the instructions
 
 // -------------------------------------------------------------------------------------------------
 // Writeback stage
