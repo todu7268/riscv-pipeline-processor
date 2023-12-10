@@ -51,8 +51,8 @@ event fe : pipeline(pipe.IF)
         }
         // Set all the clear signals.
         //Phase 7 - change to s_me_pcsrc
-        s_id_clear = s_me_pcsrc;
-        s_ex_clear = s_me_pcsrc;
+        s_id_clear = 0; //used to be s_me_pcsrc; in Phase 7
+        s_ex_clear = (s_me_pcsrc || s_id_stall); //Phase 8 change from s_me_pcsrc;
         s_me_clear = s_me_pcsrc;
         s_wb_clear = 0;
 
@@ -68,8 +68,9 @@ event if_output : pipeline(pipe.IF)
 {
     semantics
     {
-        r_pc = s_if_pcin;
-        r_id_pc = r_pc;
+        r_pc = s_id_stall? s_if_pcin : s_if_nextpc;
+        r_id_pc = s_if_pcin; //used to be r_pc; in Phase 7 
         r_id_clear = s_id_clear;
+        r_id_stall = s_id_stall;
     };
 };
