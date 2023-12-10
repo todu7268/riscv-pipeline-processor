@@ -44,7 +44,7 @@ event wb : pipeline(pipe.WB)
                 s_wb_result = s_wb_adder;
                 break;
             case RFWT_MEM:
-                //EMPTY until Phase 8
+                s_wb_result = r_wb_mem_result;
                 break;
             default:
                 codasip_fatal(RFWT_ERROR, "RFWT ERROR \n");
