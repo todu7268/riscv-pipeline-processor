@@ -33,6 +33,7 @@
 event me : pipeline(pipe.ME)
 {
     use me_output;
+    use me_memory;
 
     semantics
     {
@@ -56,7 +57,55 @@ event me : pipeline(pipe.ME)
                 s_me_pcsrc = 0; //dont take the branch
                 break;
         }
+        //Phase 8 adding a me_memory call before me_output call
+        me_memory();
         me_output();
+    };
+};
+
+event me_memory : pipeline(pipe.ME)
+{
+    semantics
+    {
+        uint1 data_ready;
+        uint1 data_response;
+        uint32 load_data_temp;
+        if (r_me_memop == MEM_NOP){
+            //if there's no memory operation, we don't need this?
+            data_ready = DONT_CARE;
+            data_response = DONT_CARE;
+            load_data_temp = DONT_CARE;
+        }
+        else{
+            ldst.transport(CP_PHS_DATA, data_ready, data_response, load_data_temp, r_me_encoded_data);
+            s_me_decoded_data = ldst.decode_data(load_data_temp, r_me_alu, r_me_memsize);
+        }
+
+        switch(r_me_memop){
+            case MEM_LW:
+                s_me_mem_result = (int32) s_me_decoded_data;
+                break;
+            case MEM_LH:
+                s_me_mem_result = (int32) (int16) s_me_decoded_data; 
+                break;
+            case MEM_LHU:
+                s_me_mem_result = (uint32) (uint16) s_me_decoded_data;
+                break;
+            case MEM_LB:
+                s_me_mem_result = (int32) (int8) s_me_decoded_data;
+                break;
+            case MEM_LBU:
+                s_me_mem_result = (uint32) (uint8) s_me_decoded_data;
+                break;
+            default:
+                s_me_mem_result = DONT_CARE;
+                break;
+        }
+
+        //Logic to assert s_me_stall if data_ready and data_response are 0s
+        if (data_ready == 0 && data_response == 0)
+            assert(s_me_stall);
+
     };
 };
 
