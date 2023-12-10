@@ -44,7 +44,20 @@ event id : pipeline(pipe.ID)
         s_id_stall = 0;
 
         if_code.transport(CP_PHS_DATA, cache_ready, cache_response, id_instr_temp);
-        s_id_instr = r_id_clear? NOP_INSTRUCTION: id_instr_temp;
+        // s_id_instr = r_id_clear? NOP_INSTRUCTION: id_instr_temp; --- Code from Phase 5-7
+        //Phase 8 changes
+        if(r_id_clear){
+            s_id_instr = NOP_INSTRUCTION;
+        }
+
+        else if (r_id_stall){
+            s_id_instr = r_id_instr_preserved;
+            r_id_pc =  r_id_pc_preserved;
+        }
+
+        else {
+            s_id_instr = id_instr_temp;
+        }
         
         //Opcode
         s_id_opc = s_id_instr[31..25] :: s_id_instr[14..12] :: s_id_instr[6..0];
