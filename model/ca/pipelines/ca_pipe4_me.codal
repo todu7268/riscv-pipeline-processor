@@ -104,12 +104,13 @@ event me_memory : pipeline(pipe.ME)
                 break;
         }
 
-        //Logic to assert s_me_stall if data_ready and data_response are 0s
-        if (r_me_memop == MEM_LB || r_me_memop == MEM_LBU || r_me_memop == MEM_LH || r_me_memop == MEM_LHU || r_me_memop == MEM_LW)
-            if (data_ready == 0 && data_response == 0)
-                if (s_me_stall == 0)
-                    //if s_me_stall is 0, crash.
-                    codasip_fatal(FATAL_ERROR_LEVEL, "Assertion error, data_ready and data_response are zeros, s_me_stall is not \n");
+        if(!data_ready && !data_response){
+            s_me_stall = 1;
+        }
+        else {
+            s_me_stall = 0;
+        }
+        
 
     };
 };

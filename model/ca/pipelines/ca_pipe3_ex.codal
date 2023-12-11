@@ -250,7 +250,7 @@ event ex_memory : pipeline(pipe.EX)
         ldst.transport(CP_PHS_ADDRESS, op_type, op_rw, s_ex_alu, s_ex_memsize);
         s_ex_encoded_data = ldst.encode_data(s_ex_fwdB_sl, s_ex_alu, s_ex_memsize);
         //Instructions say s_ex_fwd2
-
+        s_me_stall = s_ex_stall;
     };
 };
 
@@ -272,7 +272,6 @@ event ex_output : pipeline(pipe.EX)
         r_me_zero = s_ex_zero;
         
         //Phase 8 assignments
-        s_me_stall = s_ex_stall;
         r_me_memop = r_ex_memop;
         r_me_encoded_data = s_ex_encoded_data;
         r_me_memsize = s_ex_memsize;
